@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
  * @author juanmi
  */
 public class Mapa {
-    
+
     private int[][] mapa;
     private int filas;
     private int columnas;
@@ -49,15 +49,14 @@ public class Mapa {
     }
 
     public void imprimirMapa() {
-
-    for (int i = 0; i < filas; i++) {
-        for (int j = 0; j < columnas; j++) {
-            // Imprimir cada número con un ancho fijo
-            System.out.printf("%" + anchoCelda + "d", mapa[i][j]);
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                // Imprimir cada número con un ancho fijo
+                System.out.printf("%" + anchoCelda + "d", mapa[i][j]);
+            }
+            System.out.println(); // Nueva línea al final de cada fila
         }
-        System.out.println(); // Nueva línea al final de cada fila
     }
-}
 
     public int[][] getMapa() {
         return mapa;
