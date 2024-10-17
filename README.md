@@ -30,4 +30,4 @@ El agente podrá:
 ## Clonar Proyecto
 
    ```bash
-   git clone https://github.com/tuusuario/proyecto-agentes.git
+   git clone git@github.com:JuanmiAcosta/PR2_DBA.git
