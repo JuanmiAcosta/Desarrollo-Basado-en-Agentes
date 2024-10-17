@@ -27,7 +27,7 @@ El agente podrá:
 - **Mapas**: Archivos de texto que representan diferentes escenarios.
 - **Presentación**: Explicación de las decisiones de diseño e implementación.
 
-## Ejecución del Proyecto
+## Clonar Proyecto
 
    ```bash
    git clone https://github.com/tuusuario/proyecto-agentes.git
