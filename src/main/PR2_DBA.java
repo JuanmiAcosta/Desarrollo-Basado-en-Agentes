@@ -16,6 +16,8 @@ public class PR2_DBA {
         Mapa mapa = new Mapa(paquete_mapas+"mapWithComplexObstacle1.txt");
 
         mapa.imprimirMapa();
+        
+        System.out.println(mapa.getCasilla(3, 4));
 
     }
 

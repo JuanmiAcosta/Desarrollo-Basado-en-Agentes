@@ -70,4 +70,8 @@ public class Mapa {
     public int getColumnas() {
         return columnas;
     }
+    
+    public int getCasilla(int fila, int col){
+        return mapa[fila][col];
+    }
 }
