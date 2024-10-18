@@ -1,5 +1,6 @@
-package mapa;
+package entorno;
 
+import agente.Posicion;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,7 +11,8 @@ import java.io.InputStreamReader;
  * @author juanmi
  */
 public class Mapa {
-
+    // Variables
+    private String nombreArchivo;
     private int[][] mapa;
     private int filas;
     private int columnas;
@@ -18,27 +20,33 @@ public class Mapa {
     // Definir el ancho de cada celda
     private final static int anchoCelda = 3; //Sólo para impresión por consola
 
+    // Constructor
     public Mapa(String nombreArchivo) throws IOException {
+        this.nombreArchivo = nombreArchivo;
         leerMapaDeRecurso(nombreArchivo);
     }
-
+    
+    public Mapa(Mapa otroMapa) throws IOException {
+        this(otroMapa.getNombreArchivo());
+    }
+    
+    // Metodos
    private void leerMapaDeRecurso(String rutaArchivo) throws IOException {
         // Obtener el archivo como recurso desde el classpath
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream(rutaArchivo);
+        
         if (inputStream == null) {
             throw new IOException("Archivo no encontrado: " + rutaArchivo);
         }
 
         try (BufferedReader lector = new BufferedReader(new InputStreamReader(inputStream))) {
-
             this.filas = Integer.parseInt(lector.readLine().trim());
-
             this.columnas = Integer.parseInt(lector.readLine().trim());
-
             mapa = new int[filas][columnas];
 
             for (int i = 0; i < filas; i++) {
                 String[] fila = lector.readLine().trim().split("\\s+"); // Dividir por espacios en blanco
+                
                 for (int j = 0; j < columnas; j++) {
                     mapa[i][j] = Integer.parseInt(fila[j]);  // Convertir y almacenar en la matriz
                 }
@@ -58,6 +66,12 @@ public class Mapa {
         }
     }
 
+    public void colocarItem(Posicion pos, int idItem) {
+        if(posCorrecta(pos)) {
+            mapa[pos.getFila()][pos.getCol()] = idItem;
+        }
+    }
+    
     public int[][] getMapa() {
         return mapa;
     }
@@ -72,5 +86,17 @@ public class Mapa {
     
     public int getCasilla(int fila, int col){
         return mapa[fila][col];
+    }
+
+    public String getNombreArchivo() {
+        return nombreArchivo;
+    }
+    
+    // Comprueba que la posición esté dentro de los límites del mapa 
+    // y que la casilla es transitable
+    private boolean posCorrecta(Posicion pos) {
+        return (pos.getFila() >= 0 && pos.getFila() < filas) 
+                            && (pos.getCol() >= 0 && pos.getCol() < columnas)
+                                    && (mapa[pos.getFila()][pos.getCol()] == 0);
     }
 }
