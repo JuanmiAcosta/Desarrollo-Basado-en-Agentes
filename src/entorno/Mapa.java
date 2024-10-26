@@ -94,9 +94,9 @@ public class Mapa {
     
     // Comprueba que la posición esté dentro de los límites del mapa 
     // y que la casilla es transitable
-    private boolean posCorrecta(Posicion pos) {
+    public boolean posCorrecta(Posicion pos) {
         return (pos.getFila() >= 0 && pos.getFila() < filas) 
                             && (pos.getCol() >= 0 && pos.getCol() < columnas)
-                                    && (mapa[pos.getFila()][pos.getCol()] == 0);
+                                    && (mapa[pos.getFila()][pos.getCol()] == 0 || mapa[pos.getFila()][pos.getCol()] == 3);
     }
 }
