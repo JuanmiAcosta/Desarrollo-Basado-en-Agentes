@@ -20,8 +20,10 @@ public class Posicion {
         this(0 ,0);
     }
     
-    public Posicion(Posicion otraPos) {
-        this(otraPos.fila, otraPos.col);
+    // Método de copia
+    public Posicion(Posicion otra) {
+        this.fila = otra.fila;
+        this.col = otra.col;
     }
     
     // Métodos

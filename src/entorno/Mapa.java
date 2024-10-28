@@ -97,6 +97,7 @@ public class Mapa {
     public boolean posCorrecta(Posicion pos) {
         return (pos.getFila() >= 0 && pos.getFila() < filas) 
                             && (pos.getCol() >= 0 && pos.getCol() < columnas)
-                                    && (mapa[pos.getFila()][pos.getCol()] == 0 || mapa[pos.getFila()][pos.getCol()] == 3);
+                                    && (mapa[pos.getFila()][pos.getCol()] == 0 || mapa[pos.getFila()][pos.getCol()] == 3 
+                                        || mapa[pos.getFila()][pos.getCol()] == 9|| mapa[pos.getFila()][pos.getCol()] == 7);
     }
 }

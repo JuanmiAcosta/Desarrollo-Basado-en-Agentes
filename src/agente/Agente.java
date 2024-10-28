@@ -15,10 +15,9 @@ public class Agente {
     private Sensores sensores;
     private ArrayList<Boolean> movDisponibles;
     private ArrayList<Integer> movUtiles;
-    // Pregunta al entorno si los bumpers estan libres o no, entorno es el que tiene acceso a todo el mapa
-    // agente le pregunta al entorno si puede ir arriba, abajo, izq o derecha
-    // no se le puede pasar las posiciones al entorno debido a que el entorno sabe donde esta el agente 
-    // agente solo ve lo que tiene alrededor y puede guardar todo lo que queramos
+    
+    private int movDecidido;
+    private Posicion posAnterior;
 
     // Constructores
     public Agente(Posicion posAgente, Posicion posObjetivo, Sensores sensores) {
@@ -52,6 +51,10 @@ public class Agente {
 
     public Posicion getPosAgente() {
         return posAgente;
+    }
+    
+    public Posicion getPosAnterior(){
+        return posAnterior;
     }
 
     public void setPosAgente(Posicion posAgente) {
@@ -110,6 +113,9 @@ public class Agente {
     }
 
     public void realizarMov(int mov) {
+        
+        posAnterior = new Posicion(posAgente);
+        
         switch (mov) {
             case 0:
                 posAgente.setFila(posAgente.getFila() - 1);  // Arriba
@@ -124,12 +130,49 @@ public class Agente {
                 posAgente.setCol(posAgente.getCol() + 1);  // Derecha
                 break;
         }
-
+        
+        movDecidido=mov;
         sensores.incrementarEnergia();
     }
 
-    @Override
+          @Override
     public String toString() {
-        return "Agente{" + "posAgente=" + posAgente + ", posObj=" + posObj + ", sensores=" + sensores + ", movDisponibles=" + movDisponibles + ", movUtiles=" + movUtiles + '}';
+        // Convertir los ArrayList a su formato legible
+        String movimientos = String.format(
+                "DISPON. : { ARRIBA: %b, ABAJO: %b, IZQUIERDA: %b, DERECHA: %b }",
+                movDisponibles.get(0), movDisponibles.get(1), movDisponibles.get(2), movDisponibles.get(3)
+        );
+
+        // Asumiendo que tienes un ArrayList<Integer> para la utilidad de movimientos
+        String utilidadMovimientos = String.format(
+                "UTIL. : { ARRIBA: %d, ABAJO: %d, IZQUIERDA: %d, DERECHA: %d }",
+                movUtiles.get(0), movUtiles.get(1), movUtiles.get(2), movUtiles.get(3)
+        );
+        
+        String direccion;
+        switch (movDecidido) { // Suponiendo que tienes un entero que se llama 'direccionEntero'
+        case 0:
+            direccion = "ARRIBA";
+            break;
+        case 1:
+            direccion = "ABAJO";
+            break;
+        case 2:
+            direccion = "IZQUIERDA";
+            break;
+        case 3:
+            direccion = "DERECHA";
+            break;
+        default:
+            direccion = "INVALIDA"; // En caso de un valor inesperado
+            break;
+    }
+
+        return "Agente {"
+                + "\n   " + movimientos
+                + "\n   " + utilidadMovimientos
+                + "\n   MOVIMIENTO DECIDIDO: " + direccion
+                + "\n   ENERGÍA GASTADA: " + sensores.getEnergia()
+                + "\n}";
     }
 }

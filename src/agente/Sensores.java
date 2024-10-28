@@ -48,6 +48,10 @@ public class Sensores {
     public void setEntorno(Entorno entorno) {
         this.entorno = entorno;
     }
+    
+    public int getEnergia(){
+        return this.energia;
+    }
 
     @Override
     public String toString() {

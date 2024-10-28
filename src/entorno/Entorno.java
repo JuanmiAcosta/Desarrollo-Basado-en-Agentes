@@ -11,7 +11,7 @@ public class Entorno {
 
     // Varaibles
     private static final int ID_AGENTE = 9,
-            ID_OBJETIVO = 3;
+            ID_OBJETIVO = 3, RASTRO =7;
     private Mapa mapa;
     private Posicion posAgente,
             posObjetivo;
@@ -54,9 +54,10 @@ public class Entorno {
         this.mapa = mapa;
     }
 
-    public void setPosAgente(Posicion posAgente) {
+    public void setPosAgente(Posicion posAgente, Posicion posAnterior) {
         this.posAgente = posAgente;
         mapa.colocarItem(posAgente, ID_AGENTE);
+        mapa.colocarItem(posAnterior, RASTRO);
     }
 
     public void setPosObjetivo(Posicion posObjetivo) {
