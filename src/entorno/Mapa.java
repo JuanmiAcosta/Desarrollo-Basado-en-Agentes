@@ -98,6 +98,6 @@ public class Mapa {
         return (pos.getFila() >= 0 && pos.getFila() < filas) 
                             && (pos.getCol() >= 0 && pos.getCol() < columnas)
                                     && (mapa[pos.getFila()][pos.getCol()] == 0 || mapa[pos.getFila()][pos.getCol()] == 3 
-                                        || mapa[pos.getFila()][pos.getCol()] == 9|| mapa[pos.getFila()][pos.getCol()] == 7);
+                                        || mapa[pos.getFila()][pos.getCol()] == 7 || mapa[pos.getFila()][pos.getCol()] == 9); 
     }
 }
