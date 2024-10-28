@@ -10,9 +10,10 @@ import simulacion.Graficos;
  * @author juanmi
  */
 public class PR2_DBA {
+    
     public static void main(String[] args) throws IOException, InterruptedException {
         String paquete_mapas= "ejemplos_mapas/";
-        Mapa mapa = new Mapa(paquete_mapas+"mapWithoutObstacle.txt");
+        Mapa mapa = new Mapa(paquete_mapas+"mapWithVerticalWall.txt");
         mapa.imprimirMapa();
         
         System.out.println("\n");
@@ -22,7 +23,7 @@ public class PR2_DBA {
         Entorno entorno = new Entorno(new Mapa(mapa), agente.getPosAgente(), agente.getPosObj());
         entorno.getMapa().imprimirMapa();
         sensores.setEntorno(entorno);
-        Graficos graficos = new Graficos("Esperando acciones por parte del agente...",entorno.getMapa().getMapa(), 0);
+        Graficos graficos = new Graficos("Esperando acciones por parte del agente ...",entorno.getMapa().getMapa(), 0);
         
         System.out.println("\n");
         
@@ -31,7 +32,7 @@ public class PR2_DBA {
         for(int i = 0; i < 20; i++) {
             
             // Para ver la ejec
-            Thread.sleep(2000);
+            Thread.sleep(1000);
             
             agente.getMovDisponibles();
             agente.movUtiles();

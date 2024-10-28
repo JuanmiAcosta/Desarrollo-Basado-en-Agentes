@@ -83,7 +83,7 @@ public class Graficos extends JFrame {
                     g.setColor(Color.WHITE);
                     g.fillRect(offsetX + j * anchoCelda, offsetY + i * altoCelda, anchoCelda, altoCelda);
                 } else if (matriz[i][j] == MURO) {
-                    g.setColor(Color.CYAN);
+                    g.setColor(Color.DARK_GRAY);
                     g.fillRect(offsetX + j * anchoCelda, offsetY + i * altoCelda, anchoCelda, altoCelda);
                 } else if (matriz[i][j] == OBJETIVO) {
                     // Dibujar el objetivo como un rombo rojo
