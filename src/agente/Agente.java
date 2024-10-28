@@ -30,7 +30,7 @@ public class Agente {
         this.movDisponibles = new ArrayList<>();
         this.movUtiles = new ArrayList<>();
         this.memoria = new HashMap<>(); // Inicializar la memoria
-
+        this.posAnterior = new Posicion(0,0);
         this.actualizarMemoria();
 
     }
@@ -126,21 +126,6 @@ public class Agente {
         // Devuelve la media entre ambas distancias
         return (distanciaManhattan + distanciaEuclidea) / 2.0;
     }
-
-    /*
-    public int decidirMov() {
-        int mov = -1, movPeque = Integer.MAX_VALUE;
-
-        for (int i = 0; i < movUtiles.size(); i++) {
-            if (movUtiles.get(i) < movPeque) {
-                movPeque = movUtiles.get(i);
-                mov = i;
-            }
-        }
-
-        return mov;
-    }
-     */
     
     public int decidirMov() {
         int mov = -1;
@@ -155,13 +140,20 @@ public class Agente {
 
             // Consultamos cuántas veces ha pasado por esta posición
             int vecesPasadas = memoria.getOrDefault(posSiguiente, 0);
-
-            // Comprobamos si este movimiento es mejor
-            if (utilidad < minUtilidad && vecesPasadas <= minVecesPasadas) {
-                minUtilidad = utilidad;
+            
+            //if (!memoria.containsKey(simularMovimiento(i))){
+                if (posAnterior.getFila() == simularMovimiento(i).getFila() && (Math.abs(posAnterior.getCol() - simularMovimiento(i).getCol()) == 2) ||
+                    (posAnterior.getCol() == simularMovimiento(i).getCol() && (Math.abs(posAnterior.getFila() - simularMovimiento(i).getFila()) == 2))){
+                    utilidad --;
+                }
+            //}
+            
+            if ((utilidad+vecesPasadas*2) < minUtilidad){ // ESTE IF SÓLO GOTADO PERO INEFICIENTE
+                minUtilidad = (utilidad+vecesPasadas*2);
                 minVecesPasadas = vecesPasadas;
                 mov = i;
             }
+            
         }
 
         return mov;
