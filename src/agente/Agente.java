@@ -142,14 +142,18 @@ public class Agente {
             int vecesPasadas = memoria.getOrDefault(posSiguiente, 0);
             
             //if (!memoria.containsKey(simularMovimiento(i))){
-                if (posAnterior.getFila() == simularMovimiento(i).getFila() && (Math.abs(posAnterior.getCol() - simularMovimiento(i).getCol()) == 2) ||
-                    (posAnterior.getCol() == simularMovimiento(i).getCol() && (Math.abs(posAnterior.getFila() - simularMovimiento(i).getFila()) == 2))){
-                    utilidad --;
-                }
+                //if (posAnterior.getFila() == simularMovimiento(i).getFila() && (Math.abs(posAnterior.getCol() - simularMovimiento(i).getCol()) == 2) ||
+                    //(posAnterior.getCol() == simularMovimiento(i).getCol() && (Math.abs(posAnterior.getFila() - simularMovimiento(i).getFila()) == 2))){
+                    //utilidad --;
+                //}
             //}
             
             if ((utilidad+vecesPasadas*2) < minUtilidad){ // ESTE IF SÓLO GOTADO PERO INEFICIENTE
                 minUtilidad = (utilidad+vecesPasadas*2);
+                minVecesPasadas = vecesPasadas;
+                mov = i;
+            }else if((utilidad+vecesPasadas) < minUtilidad){ 
+                minUtilidad = (utilidad+vecesPasadas);
                 minVecesPasadas = vecesPasadas;
                 mov = i;
             }

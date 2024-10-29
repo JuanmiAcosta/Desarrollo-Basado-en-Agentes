@@ -19,7 +19,7 @@ public class PR2_DBA {
         System.out.println("\n");
         
         Sensores sensores = new Sensores(0);
-        Agente agente = new Agente(new Posicion(0, 0), new Posicion(4,9), sensores);
+        Agente agente = new Agente(new Posicion(3,9), new Posicion(0,5), sensores);
         //Agente agente = new Agente(new Posicion(0, 0), new Posicion(mapa.getFilas()-1, mapa.getColumnas()-1), sensores);
         Entorno entorno = new Entorno(new Mapa(mapa), agente.getPosAgente(), agente.getPosObj());
         entorno.getMapa().imprimirMapa();
