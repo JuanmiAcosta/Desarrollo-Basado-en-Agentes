@@ -138,8 +138,8 @@ public class Graficos extends JFrame {
                                 offsetX + j * anchoCelda
                             };
                             yPoints = new int[]{
-                                offsetY + i * altoCelda,
                                 offsetY + i * altoCelda + altoCelda,
+                                offsetY + i * altoCelda,
                                 offsetY + i * altoCelda + altoCelda / 2
                             };
                             break;
@@ -150,8 +150,56 @@ public class Graficos extends JFrame {
                                 offsetX + j * anchoCelda + anchoCelda
                             };
                             yPoints = new int[]{
+                                offsetY + i * altoCelda,
+                                offsetY + i * altoCelda + altoCelda,
+                                offsetY + i * altoCelda + altoCelda / 2
+                            };
+                            break;
+                        case 4: // Arriba izquierda
+                            xPoints = new int[]{
+                                offsetX + j * anchoCelda + anchoCelda,
+                                offsetX + j * anchoCelda + anchoCelda,
+                                offsetX + j * anchoCelda
+                            };
+                            yPoints = new int[]{
                                 offsetY + i * altoCelda + altoCelda,
                                 offsetY + i * altoCelda,
+                                offsetY + i * altoCelda + altoCelda / 2
+                            };
+                            break;
+                        case 5: // Arriba derecha
+                            xPoints = new int[]{
+                                offsetX + j * anchoCelda,
+                                offsetX + j * anchoCelda,
+                                offsetX + j * anchoCelda + anchoCelda
+                            };
+                            yPoints = new int[]{
+                                offsetY + i * altoCelda,
+                                offsetY + i * altoCelda + altoCelda,
+                                offsetY + i * altoCelda + altoCelda / 2
+                            };
+                            break;
+                        case 6: // Abajo izquierda
+                            xPoints = new int[]{
+                                offsetX + j * anchoCelda + anchoCelda,
+                                offsetX + j * anchoCelda + anchoCelda,
+                                offsetX + j * anchoCelda
+                            };
+                            yPoints = new int[]{
+                                offsetY + i * altoCelda + altoCelda,
+                                offsetY + i * altoCelda,
+                                offsetY + i * altoCelda + altoCelda / 2
+                            };
+                            break;
+                        case 7: // Abajo derecha
+                            xPoints = new int[]{
+                                offsetX + j * anchoCelda,
+                                offsetX + j * anchoCelda,
+                                offsetX + j * anchoCelda + anchoCelda
+                            };
+                            yPoints = new int[]{
+                                offsetY + i * altoCelda,
+                                offsetY + i * altoCelda + altoCelda,
                                 offsetY + i * altoCelda + altoCelda / 2
                             };
                             break;
@@ -185,7 +233,6 @@ public class Graficos extends JFrame {
                 g.drawRect(offsetX + j * anchoCelda, offsetY + i * altoCelda, anchoCelda, altoCelda);
             }
         }
-
     }
 
     public void agregarTraza(String nuevaAccion) {
