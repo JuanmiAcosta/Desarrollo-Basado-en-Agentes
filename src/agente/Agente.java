@@ -30,7 +30,7 @@ public class Agente {
         this.movDisponibles = new ArrayList<>();
         this.movUtiles = new ArrayList<>();
         this.memoria = new HashMap<>(); // Inicializar la memoria
-        this.posAnterior = new Posicion(0,0);
+        this.posAnterior = new Posicion(0, 0);
         this.actualizarMemoria();
 
     }
@@ -90,6 +90,22 @@ public class Agente {
             case 3:
                 posSiguiente.setCol(posAgente.getCol() + 1);  // Derecha
                 break;
+            case 4:
+                posSiguiente.setFila(posAgente.getFila() - 1);  // Arriba-Izquierda
+                posSiguiente.setCol(posAgente.getCol() - 1);
+                break;
+            case 5:
+                posSiguiente.setFila(posAgente.getFila() - 1);  // Arriba-Derecha
+                posSiguiente.setCol(posAgente.getCol() + 1);
+                break;
+            case 6:
+                posSiguiente.setFila(posAgente.getFila() + 1);  // Abajo-Izquierda
+                posSiguiente.setCol(posAgente.getCol() - 1);
+                break;
+            case 7:
+                posSiguiente.setFila(posAgente.getFila() + 1);  // Abajo-Derecha
+                posSiguiente.setCol(posAgente.getCol() + 1);
+                break;
         }
 
         return posSiguiente;
@@ -126,7 +142,7 @@ public class Agente {
         // Devuelve la media entre ambas distancias
         return (distanciaManhattan + distanciaEuclidea) / 2.0;
     }
-    
+
     public int decidirMov() {
         int mov = -1;
         Double minUtilidad = Double.MAX_VALUE;
@@ -140,31 +156,29 @@ public class Agente {
 
             // Consultamos cuántas veces ha pasado por esta posición
             int vecesPasadas = memoria.getOrDefault(posSiguiente, 0);
-            
-            //if (!memoria.containsKey(simularMovimiento(i))){
-                //if (posAnterior.getFila() == simularMovimiento(i).getFila() && (Math.abs(posAnterior.getCol() - simularMovimiento(i).getCol()) == 2) ||
-                    //(posAnterior.getCol() == simularMovimiento(i).getCol() && (Math.abs(posAnterior.getFila() - simularMovimiento(i).getFila()) == 2))){
-                    //utilidad --;
-                //}
-            //}
-            
-            if ((utilidad+vecesPasadas*2) < minUtilidad){ // ESTE IF SÓLO GOTADO PERO INEFICIENTE
-                minUtilidad = (utilidad+vecesPasadas*2);
+
+            /*
+            if ((utilidad + vecesPasadas * 2) < minUtilidad) { // ESTE IF SÓLO GOTADO PERO INEFICIENTE
+                minUtilidad = (utilidad + vecesPasadas * 2);
                 minVecesPasadas = vecesPasadas;
                 mov = i;
-            }else if((utilidad+vecesPasadas) < minUtilidad){ 
-                minUtilidad = (utilidad+vecesPasadas);
+            } else if ((utilidad + vecesPasadas) < minUtilidad) {
+                minUtilidad = (utilidad + vecesPasadas);
                 minVecesPasadas = vecesPasadas;
+                mov = i;
+            }*/
+            
+            if (utilidad < minUtilidad ) {
+                minUtilidad = utilidad;
                 mov = i;
             }
-            
+
         }
 
         return mov;
     }
 
     public void realizarMov(int mov) {
-
         posAnterior = new Posicion(posAgente);
 
         switch (mov) {
@@ -179,6 +193,22 @@ public class Agente {
                 break;
             case 3:
                 posAgente.setCol(posAgente.getCol() + 1);  // Derecha
+                break;
+            case 4:
+                posAgente.setFila(posAgente.getFila() - 1);  // Arriba-Izquierda
+                posAgente.setCol(posAgente.getCol() - 1);
+                break;
+            case 5:
+                posAgente.setFila(posAgente.getFila() - 1);  // Arriba-Derecha
+                posAgente.setCol(posAgente.getCol() + 1);
+                break;
+            case 6:
+                posAgente.setFila(posAgente.getFila() + 1);  // Abajo-Izquierda
+                posAgente.setCol(posAgente.getCol() - 1);
+                break;
+            case 7:
+                posAgente.setFila(posAgente.getFila() + 1);  // Abajo-Derecha
+                posAgente.setCol(posAgente.getCol() + 1);
                 break;
         }
 
@@ -203,31 +233,46 @@ public class Agente {
 
     @Override
     public String toString() {
-        // Convertir los ArrayList a su formato legible
+        // Convertir los ArrayList a su formato legible usando direcciones descriptivas
         String movimientos = String.format(
-                "DISPON. : { ARRIBA: %b, ABAJO: %b, IZQUIERDA: %b, DERECHA: %b }",
-                movDisponibles.get(0), movDisponibles.get(1), movDisponibles.get(2), movDisponibles.get(3)
+                "DISPON. : { ARRIBA: %b, ABAJO: %b, IZQUIERDA: %b, DERECHA: %b, ARRIBA-IZQUIERDA: %b, ARRIBA-DERECHA: %b, ABAJO-IZQUIERDA: %b, ABAJO-DERECHA: %b }",
+                movDisponibles.get(0), movDisponibles.get(1), movDisponibles.get(2), movDisponibles.get(3),
+                movDisponibles.get(4), movDisponibles.get(5), movDisponibles.get(6), movDisponibles.get(7)
         );
 
-        // Asumiendo que tienes un ArrayList<Integer> para la utilidad de movimientos
+        // Asumiendo que tienes un ArrayList<Double> para la utilidad de movimientos
         String utilidadMovimientos = String.format(
-                "UTIL. : { ARRIBA: %.2e, ABAJO: %.2e, IZQUIERDA: %.2e, DERECHA: %.2e }",
-                movUtiles.get(0), movUtiles.get(1), movUtiles.get(2), movUtiles.get(3)
+                "UTIL. : { ARRIBA: %.2e, ABAJO: %.2e, IZQUIERDA: %.2e, DERECHA: %.2e, ARRIBA-IZQUIERDA: %.2e, ARRIBA-DERECHA: %.2e, ABAJO-IZQUIERDA: %.2e, ABAJO-DERECHA: %.2e }",
+                movUtiles.get(0), movUtiles.get(1), movUtiles.get(2), movUtiles.get(3),
+                movUtiles.get(4), movUtiles.get(5), movUtiles.get(6), movUtiles.get(7)
         );
 
+        // Convertir el valor de movDecidido en una dirección de texto descriptiva
         String direccion;
-        switch (movDecidido) { // Suponiendo que tienes un entero que se llama 'direccionEntero'
+        switch (movDecidido) {
             case 0:
-                direccion = "ARRIBA";
+                direccion = "ARR.";
                 break;
             case 1:
-                direccion = "ABAJO";
+                direccion = "AB.";
                 break;
             case 2:
-                direccion = "IZQUIERDA";
+                direccion = "IZQ.";
                 break;
             case 3:
-                direccion = "DERECHA";
+                direccion = "DER.";
+                break;
+            case 4:
+                direccion = "ARR-IZQ";
+                break;
+            case 5:
+                direccion = "ARR-DER";
+                break;
+            case 6:
+                direccion = "AB-IZQ";
+                break;
+            case 7:
+                direccion = "AB-DER";
                 break;
             default:
                 direccion = "INVALIDA"; // En caso de un valor inesperado
