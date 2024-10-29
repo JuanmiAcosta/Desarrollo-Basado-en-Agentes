@@ -13,15 +13,14 @@ public class PR2_DBA {
     
     public static void main(String[] args) throws IOException, InterruptedException {
         String paquete_mapas= "ejemplos_mapas/";
-        //Mapa mapa = new Mapa(paquete_mapas+"mapWithDiagonalWall.txt");
-        Mapa mapa = new Mapa(paquete_mapas+"mapWithoutObstacle.txt");
+        Mapa mapa = new Mapa(paquete_mapas+"mapWithComplexObstacle2.txt");
         mapa.imprimirMapa();
         
         System.out.println("\n");
         
         Sensores sensores = new Sensores(0);
-        //Agente agente = new Agente(new Posicion(3,9), new Posicion(0,5), sensores);
-        Agente agente = new Agente(new Posicion(0, 0), new Posicion(mapa.getFilas()-1, mapa.getColumnas()-1), sensores);
+        //Agente agente = new Agente(new Posicion(3,7), new Posicion(8,0), sensores);
+        Agente agente = new Agente(new Posicion(0,0), new Posicion(mapa.getFilas()-1, mapa.getColumnas()-1), sensores);
         Entorno entorno = new Entorno(new Mapa(mapa), agente.getPosAgente(), agente.getPosObj());
         entorno.getMapa().imprimirMapa();
         sensores.setEntorno(entorno);

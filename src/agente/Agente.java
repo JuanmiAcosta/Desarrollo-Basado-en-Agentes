@@ -156,20 +156,14 @@ public class Agente {
 
             // Consultamos cuántas veces ha pasado por esta posición
             int vecesPasadas = memoria.getOrDefault(posSiguiente, 0);
-
-            /*
-            if ((utilidad + vecesPasadas * 2) < minUtilidad) { // ESTE IF SÓLO GOTADO PERO INEFICIENTE
+            
+            if ((utilidad + vecesPasadas * 2) < minUtilidad) { 
                 minUtilidad = (utilidad + vecesPasadas * 2);
                 minVecesPasadas = vecesPasadas;
                 mov = i;
             } else if ((utilidad + vecesPasadas) < minUtilidad) {
                 minUtilidad = (utilidad + vecesPasadas);
                 minVecesPasadas = vecesPasadas;
-                mov = i;
-            }*/
-            
-            if (utilidad < minUtilidad ) {
-                minUtilidad = utilidad;
                 mov = i;
             }
 
