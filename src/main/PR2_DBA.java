@@ -13,14 +13,14 @@ public class PR2_DBA {
     
     public static void main(String[] args) throws IOException, InterruptedException {
         String paquete_mapas= "ejemplos_mapas/";
-        Mapa mapa = new Mapa(paquete_mapas+"mapWithComplexObstacle2.txt");
+        Mapa mapa = new Mapa(paquete_mapas+"mapWithComplexObstacle3.txt");
         mapa.imprimirMapa();
         
         System.out.println("\n");
         
         Sensores sensores = new Sensores(0);
         //Agente agente = new Agente(new Posicion(3,7), new Posicion(8,0), sensores);
-        Agente agente = new Agente(new Posicion(0,0), new Posicion(mapa.getFilas()-1, mapa.getColumnas()-1), sensores);
+        Agente agente = new Agente(new Posicion(7,8), new Posicion(mapa.getFilas()-1,4), sensores);
         Entorno entorno = new Entorno(new Mapa(mapa), agente.getPosAgente(), agente.getPosObj());
         entorno.getMapa().imprimirMapa();
         sensores.setEntorno(entorno);
@@ -33,7 +33,7 @@ public class PR2_DBA {
         for(int i = 0; i < 200; i++) {
             
             // Para ver la ejecución poco a poco
-            Thread.sleep(1000);
+            Thread.sleep(300);
             
             // Análisis del entorno 1BEHAVIOUR
             agente.getMovDisponibles();
