@@ -28,8 +28,6 @@ public class PR2_DBA {
         
         System.out.println("\n");
         
-        boolean encontrado = false;
-        
         for(int i = 0; i < 200; i++) {
             
             // Para ver la ejecución poco a poco

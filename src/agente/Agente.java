@@ -32,7 +32,6 @@ public class Agente {
         this.memoria = new HashMap<>(); // Inicializar la memoria
         this.posAnterior = new Posicion(0,0);
         this.actualizarMemoria();
-
     }
 
     public Agente() {
@@ -118,7 +117,7 @@ public class Agente {
         return Math.sqrt(diffFila * diffFila + diffCol * diffCol);
     }
 
-// Calcula la utilidad basada en la media de la distancia Manhattan y la distancia Euclidiana
+    // Calcula la utilidad basada en la media de la distancia Manhattan y la distancia Euclidiana
     private double calcularUtilidad(Posicion posAgente, Posicion posObj) {
         int distanciaManhattan = distanciaManhattan(posAgente, posObj);
         double distanciaEuclidea = distanciaEuclidea(posAgente, posObj);
@@ -130,7 +129,6 @@ public class Agente {
     public int decidirMov() {
         int mov = -1;
         Double minUtilidad = Double.MAX_VALUE;
-        int minVecesPasadas = Integer.MAX_VALUE;
 
         for (int i = 0; i < movUtiles.size(); i++) {
             Double utilidad = movUtiles.get(i);
@@ -150,10 +148,8 @@ public class Agente {
             
             if ((utilidad+vecesPasadas*2) < minUtilidad){ // ESTE IF SÓLO GOTADO PERO INEFICIENTE
                 minUtilidad = (utilidad+vecesPasadas*2);
-                minVecesPasadas = vecesPasadas;
                 mov = i;
             }
-            
         }
 
         return mov;
