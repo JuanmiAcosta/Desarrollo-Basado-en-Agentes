@@ -16,7 +16,6 @@ public class Sensores {
     private int energia;
     Entorno entorno;
     
-    
     // Constructor
     public Sensores(int energia) {
         this.energia = energia;
@@ -30,7 +29,6 @@ public class Sensores {
     public Sensores(Sensores otro) {
         this(otro.energia);
     }
-    
     
     // Metodos
     public ArrayList<Boolean> analizarEntorno() {
@@ -51,6 +49,10 @@ public class Sensores {
     
     public int getEnergia(){
         return this.energia;
+    }
+
+    public Entorno getEntorno() {
+        return entorno;
     }
 
     @Override

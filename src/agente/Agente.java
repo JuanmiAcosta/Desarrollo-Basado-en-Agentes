@@ -1,5 +1,7 @@
 package agente;
 
+import comportamientos.*;
+import jade.core.Agent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -7,18 +9,17 @@ import java.util.HashMap;
  *
  * @author jorge
  */
-public class Agente {
+public class Agente extends Agent {
     // Variables
-
     private Posicion posAgente,
             posObj;
     private Sensores sensores;
     private ArrayList<Boolean> movDisponibles;
     private ArrayList<Double> movUtiles;
-
     private int movDecidido;
     private Posicion posAnterior; //Para dibujar rastro
-
+    private int movRealizar;
+    
     // Memoria del agente
     private HashMap<Posicion, Integer> memoria; // Memoria del agente
 
@@ -32,6 +33,7 @@ public class Agente {
         this.memoria = new HashMap<>(); // Inicializar la memoria
         this.posAnterior = new Posicion(0, 0);
         this.actualizarMemoria();
+        this.movRealizar = -1;
     }
 
     public Agente() {
@@ -45,6 +47,14 @@ public class Agente {
     }
 
     // Metodos 
+    @Override
+    public void setup() {
+        addBehaviour(new AnalisisEntorno(this));        // Behaviour 1: Analisis del entorno
+        addBehaviour(new Decision(this));       // Behaviour 2: Decision en base al entorno
+        addBehaviour(new RealizacionMov(this));     // Behaviour 3: Realizacion del movimiento
+        addBehaviour(new RepercusionEnt(this, sensores.getEntorno()));     // Behaviour 4: Repercusion en el entorno
+    }
+    
     public Sensores getSensores() {
         return sensores;
     }
@@ -71,6 +81,14 @@ public class Agente {
 
     public Posicion getPosObj() {
         return posObj;
+    }
+
+    public void setMovRealizar(int movRealizar) {
+        this.movRealizar = movRealizar;
+    }
+
+    public int getMovRealizar() {
+        return movRealizar;
     }
 
     private Posicion simularMovimiento(int movimiento) {
@@ -155,18 +173,6 @@ public class Agente {
 
             // Consultamos cuántas veces ha pasado por esta posición
             int vecesPasadas = memoria.getOrDefault(posSiguiente, 0);
-            
-            //if (!memoria.containsKey(simularMovimiento(i))){
-                if (posAnterior.getFila() == simularMovimiento(i).getFila() && (Math.abs(posAnterior.getCol() - simularMovimiento(i).getCol()) == 2) ||
-                    (posAnterior.getCol() == simularMovimiento(i).getCol() && (Math.abs(posAnterior.getFila() - simularMovimiento(i).getFila()) == 2))){
-                    utilidad --;
-                }
-            //}
-            
-            if ((utilidad+vecesPasadas*2) < minUtilidad){ // ESTE IF SÓLO GOTADO PERO INEFICIENTE
-                minUtilidad = (utilidad+vecesPasadas*2);
-                mov = i;
-            }
 
             if (((utilidad + vecesPasadas * vecesPasadas) < minUtilidad)){// && (vecesPasadas <=2)) { 
                 minUtilidad = (utilidad + vecesPasadas * vecesPasadas); // penalizamos cuadráticamente
@@ -285,5 +291,9 @@ public class Agente {
                 + "\n   MOVIMIENTO DECIDIDO: " + direccion
                 + "\n   ENERGÍA GASTADA: " + sensores.getEnergia()
                 + "\n}";
+    }
+    
+    public boolean objEncontrado() {
+        return posAgente.equals(posObj);
     }
 }
