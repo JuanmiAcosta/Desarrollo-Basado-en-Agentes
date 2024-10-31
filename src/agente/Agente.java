@@ -43,21 +43,6 @@ public class Agente extends Agent {
 
     public Agente() {
         this(null, null, null, null);
-        this.movDisponibles = new ArrayList<>();
-        this.movUtiles = new ArrayList<>();
-        this.memoria = new HashMap<>(); // Inicializar la memoria
-        this.posAnterior = new Posicion(0, 0);
-        this.movRealizar = -1;
-        this.graficos = new Graficos();
-    }
-
-    public Agente(Agente otroAgente, Graficos g) {
-        this(otroAgente.posAgente, otroAgente.posObj, otroAgente.sensores , otroAgente.graficos);
-        this.memoria = new HashMap<>(otroAgente.memoria); // Copia la memoria
-        this.movDisponibles = new ArrayList<>();
-        this.movUtiles = new ArrayList<>();
-        this.posAnterior = new Posicion(0, 0);
-        this.movRealizar = -1;
     }
 
     // Metodos 
