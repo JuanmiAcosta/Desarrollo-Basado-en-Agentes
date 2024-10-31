@@ -19,7 +19,7 @@ import simulacion.Graficos;
 
 public class PR2_DBA {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException { // mapWithComplexObstacle3.txt 7 8 9 3
         try {
             // Iniciar el Main Container de JADE
             Runtime jadeRuntime = Runtime.instance();
@@ -55,23 +55,30 @@ public class PR2_DBA {
 
             scanner.close();
 
+            // Mostrar los datos ingresados
+            System.out.println("\nDatos ingresados:");
+            System.out.println("Mapa seleccionado: " + mapaSeleccionado);
+            System.out.println("Coordenadas del agente: (" + filaAgente + ", " + colAgente + ")");
+            System.out.println("Coordenadas del objetivo: (" + filaObjetivo + ", " + colObjetivo + ")");
+
             Mapa mapa = new Mapa("ejemplos_mapas/" + mapaSeleccionado);
-            
+
             Sensores sensores = new Sensores(0);
-            Agente agente = new Agente(new Posicion(filaAgente, colAgente), new Posicion(filaObjetivo, colObjetivo), sensores);
-            Entorno entorno = new Entorno(new Mapa(mapa), agente.getPosAgente(), agente.getPosObj());
+            //Agente agente = new Agente(new Posicion(filaAgente, colAgente), new Posicion(filaObjetivo, colObjetivo), sensores);
+            Entorno entorno = new Entorno(new Mapa(mapa), new Posicion(filaAgente, colAgente), new Posicion(filaObjetivo, colObjetivo));
             sensores.setEntorno(entorno);
-            Graficos graficos = new Graficos("Esperando acciones por parte del agente ...",entorno.getMapa().getMapa(), 0);
+            Graficos graficos = new Graficos("Esperando acciones por parte del agente ...", entorno.getMapa().getMapa(), 0);
 
             // Ruta completa de la clase del agente (asume que están en el paquete 'ejercicios')
-            String claseAgente = "Agente.agente";
+            String claseAgente = "agente.Agente";
 
             // Crear un contenedor secundario para el agente
             Profile agentProfile = new ProfileImpl();
             ContainerController agentContainer = jadeRuntime.createAgentContainer(agentProfile);
 
             // Crear el agente basado en el número del ejercicio
-            AgentController agent = agentContainer.createNewAgent("agente", claseAgente, null);
+            Object[] argsAgent = new Object[] { new Posicion(filaAgente, colAgente), new Posicion(filaObjetivo, colObjetivo), sensores , graficos};
+            AgentController agent = agentContainer.createNewAgent("agente", claseAgente, argsAgent);
 
             // Iniciar el agente
             agent.start();

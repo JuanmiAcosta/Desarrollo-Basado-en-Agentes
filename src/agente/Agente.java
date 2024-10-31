@@ -4,12 +4,14 @@ import comportamientos.*;
 import jade.core.Agent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import simulacion.Graficos;
 
 /**
  *
  * @author jorge
  */
 public class Agente extends Agent {
+
     // Variables
     private Posicion posAgente,
             posObj;
@@ -19,12 +21,15 @@ public class Agente extends Agent {
     private int movDecidido;
     private Posicion posAnterior; //Para dibujar rastro
     private int movRealizar;
-    
+
+    //Gráficos en el agente
+    private Graficos graficos;
+
     // Memoria del agente
     private HashMap<Posicion, Integer> memoria; // Memoria del agente
 
     // Constructores
-    public Agente(Posicion posAgente, Posicion posObjetivo, Sensores sensores) {
+    public Agente(Posicion posAgente, Posicion posObjetivo, Sensores sensores, Graficos g) {
         this.posAgente = posAgente;
         this.posObj = posObjetivo;
         this.sensores = sensores;
@@ -32,29 +37,58 @@ public class Agente extends Agent {
         this.movUtiles = new ArrayList<>();
         this.memoria = new HashMap<>(); // Inicializar la memoria
         this.posAnterior = new Posicion(0, 0);
-        this.actualizarMemoria();
         this.movRealizar = -1;
+        this.graficos = g;
     }
 
     public Agente() {
-        this(null, null, null);
-        this.memoria = null;
+        this(null, null, null, null);
+        this.movDisponibles = new ArrayList<>();
+        this.movUtiles = new ArrayList<>();
+        this.memoria = new HashMap<>(); // Inicializar la memoria
+        this.posAnterior = new Posicion(0, 0);
+        this.movRealizar = -1;
+        this.graficos = new Graficos();
     }
 
-    public Agente(Agente otroAgente) {
-        this(otroAgente.posAgente, otroAgente.posObj, otroAgente.sensores);
+    public Agente(Agente otroAgente, Graficos g) {
+        this(otroAgente.posAgente, otroAgente.posObj, otroAgente.sensores , otroAgente.graficos);
         this.memoria = new HashMap<>(otroAgente.memoria); // Copia la memoria
+        this.movDisponibles = new ArrayList<>();
+        this.movUtiles = new ArrayList<>();
+        this.posAnterior = new Posicion(0, 0);
+        this.movRealizar = -1;
     }
 
     // Metodos 
     @Override
-    public void setup() {
+    public void setup() { //Omite const. con parámetros y usa el sin parámetros
+
+        Object[] args = getArguments();
+        if (args != null && args.length >= 4) {
+            this.posAgente = (Posicion) args[0];
+            this.posObj = (Posicion) args[1];
+            this.sensores = (Sensores) args[2];
+            this.movDisponibles = new ArrayList<>();
+            this.movUtiles = new ArrayList<>();
+            this.memoria = new HashMap<>(); // Inicializar la memoria
+            this.posAnterior = new Posicion(0, 0);
+            this.movRealizar = -1;
+            this.graficos = (Graficos) args[3];
+            this.actualizarMemoria();
+
+        } else {
+            System.out.println("Error: Parámetros de inicialización insuficientes para el agente.");
+            doDelete(); // Eliminar agente si los parámetros son insuficientes
+            return;
+        }
+
         addBehaviour(new AnalisisEntorno(this));        // Behaviour 1: Analisis del entorno
         addBehaviour(new Decision(this));       // Behaviour 2: Decision en base al entorno
         addBehaviour(new RealizacionMov(this));     // Behaviour 3: Realizacion del movimiento
         addBehaviour(new RepercusionEnt(this, sensores.getEntorno()));     // Behaviour 4: Repercusion en el entorno
     }
-    
+
     public Sensores getSensores() {
         return sensores;
     }
@@ -155,7 +189,6 @@ public class Agente extends Agent {
     private double calcularUtilidad(Posicion posAgente, Posicion posObj) {
         int distanciaManhattan = distanciaManhattan(posAgente, posObj);
         double distanciaEuclidea = distanciaEuclidea(posAgente, posObj);
-        
 
         // Devuelve la media entre ambas distancias
         return (distanciaManhattan + distanciaEuclidea) / 2.0;
@@ -165,7 +198,7 @@ public class Agente extends Agent {
         int mov = -1;
         Double minUtilidad = Double.MAX_VALUE;
         int minVecesPasadas = Integer.MAX_VALUE;
-        
+
         for (int i = 0; i < movUtiles.size(); i++) {
             Double utilidad = movUtiles.get(i);
 
@@ -175,7 +208,7 @@ public class Agente extends Agent {
             // Consultamos cuántas veces ha pasado por esta posición
             int vecesPasadas = memoria.getOrDefault(posSiguiente, 0);
 
-            if (((utilidad + vecesPasadas * vecesPasadas) < minUtilidad)){// && (vecesPasadas <=2)) { 
+            if (((utilidad + vecesPasadas * vecesPasadas) < minUtilidad)) {// && (vecesPasadas <=2)) { 
                 minUtilidad = (utilidad + vecesPasadas * vecesPasadas); // penalizamos cuadráticamente
                 minVecesPasadas = vecesPasadas;
                 mov = i;
@@ -226,7 +259,7 @@ public class Agente extends Agent {
     // Método para actualizar la memoria del agente
     public void actualizarMemoria() {
         Posicion pos = new Posicion(posAgente);
-        memoria.put(pos, memoria.getOrDefault(posAgente, 0) + 1);
+        memoria.put(pos, memoria.getOrDefault(pos, 0) + 1);
     }
 
     public void imprimirMemoria() {
@@ -293,8 +326,12 @@ public class Agente extends Agent {
                 + "\n   ENERGÍA GASTADA: " + sensores.getEnergia()
                 + "\n}";
     }
-    
+
     public boolean objEncontrado() {
         return posAgente.equals(posObj);
+    }
+
+    public Graficos getGraficos() {
+        return this.graficos;
     }
 }

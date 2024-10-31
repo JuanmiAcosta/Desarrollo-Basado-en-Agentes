@@ -7,10 +7,12 @@ package comportamientos;
 import agente.Agente;
 import entorno.Entorno;
 import jade.core.behaviours.Behaviour;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
- * @author jorge
+ * @author juanmi
  */
 public class RepercusionEnt extends Behaviour {
     // Variables
@@ -26,9 +28,16 @@ public class RepercusionEnt extends Behaviour {
      // Metodos
     @Override
     public void action() {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(RepercusionEnt.class.getName()).log(Level.SEVERE, null, ex);
+        }
         entorno.setPosAgente(agente.getPosAgente(), agente.getPosAnterior());
         entorno.getMapa().imprimirMapa();
         agente.imprimirMemoria();
+        agente.getGraficos().agregarTraza(agente.toString());
+        agente.getGraficos().actualizarMatriz(agente.getSensores().getEntorno().getMapa().getMapa(), agente.getMovRealizar());
     }
 
     @Override

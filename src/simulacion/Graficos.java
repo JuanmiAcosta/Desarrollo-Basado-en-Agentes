@@ -23,6 +23,11 @@ public class Graficos extends JFrame {
         this.direccionAgente = direccionAgente; // Inicializar dirección del agente
         inicializarComponentes(textoInicial);
     }
+    
+    public Graficos(){
+        this.matriz=null;
+        this.direccionAgente=-1;
+    }
 
     private void inicializarComponentes(String textoInicial) {
         // Configuración de la ventana principal
