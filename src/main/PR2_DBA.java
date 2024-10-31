@@ -1,71 +1,85 @@
 package main;
 
-import agente.*;
-import entorno.*;
+import agente.Agente;
+import agente.Posicion;
+import agente.Sensores;
+import entorno.Entorno;
+import entorno.Mapa;
+import jade.core.Profile;
+import jade.core.ProfileImpl;
+import jade.core.Runtime;
+import jade.wrapper.AgentContainer;
+import jade.wrapper.AgentController;
+import jade.wrapper.ContainerController;
+import jade.wrapper.StaleProxyException;
 import java.io.IOException;
+
+import java.util.Scanner;
 import simulacion.Graficos;
 
-/**
- *
- * @author juanmi
- */
 public class PR2_DBA {
-    
-    public static void main(String[] args) throws IOException, InterruptedException {
-        String paquete_mapas= "ejemplos_mapas/";
-        Mapa mapa = new Mapa(paquete_mapas+"mapWithComplexObstacle3.txt");
-        mapa.imprimirMapa();
-        
-        System.out.println("\n");
-        
-        Sensores sensores = new Sensores(0);
-        //Agente agente = new Agente(new Posicion(3,7), new Posicion(8,0), sensores);
-        Agente agente = new Agente(new Posicion(7,8), new Posicion(mapa.getFilas()-1,4), sensores);
-        Entorno entorno = new Entorno(new Mapa(mapa), agente.getPosAgente(), agente.getPosObj());
-        entorno.getMapa().imprimirMapa();
-        sensores.setEntorno(entorno);
-        Graficos graficos = new Graficos("Esperando acciones por parte del agente ...",entorno.getMapa().getMapa(), 0);
-        
-        System.out.println("\n");
-        
-        boolean encontrado = false;
-        
-        for(int i = 0; i < 200; i++) {
-            
-            // Para ver la ejecución poco a poco
-            Thread.sleep(300);
-            
-            // Análisis del entorno 1BEHAVIOUR
-            agente.getMovDisponibles();
-            agente.movUtiles();
-            
-            // Decisión 2BEHAVIOUR
-            int mov = agente.decidirMov();
-            System.out.println(mov);
-            
-            // Realización del movimiento 3BEHAVIOUR
-            agente.realizarMov(mov);
-            agente.actualizarMemoria();
-            System.out.println(agente.toString());
-            System.out.println("\n");
-            System.out.println(agente.getPosAgente());
-            System.out.println(agente.getPosAnterior());
-            
-            // Repercusión en el entorno 4BEHAVIOUR
-            entorno.setPosAgente(agente.getPosAgente(), agente.getPosAnterior());
-            entorno.getMapa().imprimirMapa();
-            System.out.println("\n");
-            agente.imprimirMemoria();
-            System.out.println("\n");
-            
-            //Gráficos
-            graficos.agregarTraza(agente.toString());
-            graficos.actualizarMatriz(entorno.getMapa().getMapa(), mov);
-            
-            if((agente.getPosAgente().getFila() == agente.getPosObj().getFila())
-                    && (agente.getPosAgente().getCol() == agente.getPosObj().getCol())) {
-                break;
+
+    public static void main(String[] args) throws IOException {
+        try {
+            // Iniciar el Main Container de JADE
+            Runtime jadeRuntime = Runtime.instance();
+            Profile mainProfile = new ProfileImpl();
+            mainProfile.setParameter(Profile.GUI, "false");  // Mostrar GUI del Main Container
+            AgentContainer mainContainer = jadeRuntime.createMainContainer(mainProfile);
+
+            System.out.println("Main container iniciado...");
+
+            Scanner scanner = new Scanner(System.in);
+            String[] inputs;
+
+            while (true) {
+                // Solicitar todos los datos en una línea
+                System.out.print("Introduce el nombre del mapa, la fila del agente, la columna del agente, la fila del objetivo y la columna del objetivo separados por espacios: ");
+                String inputLine = scanner.nextLine();
+                inputs = inputLine.split(" ");
+
+                // Verificar si se han ingresado exactamente 5 parámetros
+                if (inputs.length == 5) {
+                    break;
+                } else {
+                    System.out.println("Error: Debes ingresar exactamente 5 parámetros. Inténtalo de nuevo.\n");
+                }
             }
+
+            // Asignar los valores a las variables
+            String mapaSeleccionado = inputs[0];
+            int filaAgente = Integer.parseInt(inputs[1]);
+            int colAgente = Integer.parseInt(inputs[2]);
+            int filaObjetivo = Integer.parseInt(inputs[3]);
+            int colObjetivo = Integer.parseInt(inputs[4]);
+
+            scanner.close();
+
+            Mapa mapa = new Mapa("ejemplos_mapas/" + mapaSeleccionado);
+            
+            Sensores sensores = new Sensores(0);
+            Agente agente = new Agente(new Posicion(filaAgente, colAgente), new Posicion(filaObjetivo, colObjetivo), sensores);
+            Entorno entorno = new Entorno(new Mapa(mapa), agente.getPosAgente(), agente.getPosObj());
+            sensores.setEntorno(entorno);
+            Graficos graficos = new Graficos("Esperando acciones por parte del agente ...",entorno.getMapa().getMapa(), 0);
+
+            // Ruta completa de la clase del agente (asume que están en el paquete 'ejercicios')
+            String claseAgente = "Agente.agente";
+
+            // Crear un contenedor secundario para el agente
+            Profile agentProfile = new ProfileImpl();
+            ContainerController agentContainer = jadeRuntime.createAgentContainer(agentProfile);
+
+            // Crear el agente basado en el número del ejercicio
+            AgentController agent = agentContainer.createNewAgent("agente", claseAgente, null);
+
+            // Iniciar el agente
+            agent.start();
+            System.out.println("Agente iniciado.");
+
+        } catch (StaleProxyException e) {
+            e.printStackTrace();
         }
     }
+
 }

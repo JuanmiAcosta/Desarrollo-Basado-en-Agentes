@@ -138,6 +138,7 @@ public class Agente {
     private double calcularUtilidad(Posicion posAgente, Posicion posObj) {
         int distanciaManhattan = distanciaManhattan(posAgente, posObj);
         double distanciaEuclidea = distanciaEuclidea(posAgente, posObj);
+        
 
         // Devuelve la media entre ambas distancias
         return (distanciaManhattan + distanciaEuclidea) / 2.0;
