@@ -24,7 +24,7 @@ public class RealizacionMov extends Behaviour {
      // Metodos
     @Override
     public void action() {
-        agente.realizarMov(agente.getMovRealizar());
+        agente.realizarMov(agente.getMovDecidido());
         agente.actualizarMemoria();
     }
 

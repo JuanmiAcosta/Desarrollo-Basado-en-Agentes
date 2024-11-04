@@ -37,7 +37,7 @@ public class RepercusionEnt extends Behaviour {
         entorno.getMapa().imprimirMapa();
         agente.imprimirMemoria();
         agente.getGraficos().agregarTraza(agente.toString());
-        agente.getGraficos().actualizarMatriz(agente.getSensores().getEntorno().getMapa().getMapa(), agente.getMovRealizar());
+        agente.getGraficos().actualizarMatriz(agente.getSensores().getEntorno().getMapa().getMapa(), agente.getMovDecidido());
     }
 
     @Override

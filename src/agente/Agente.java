@@ -22,7 +22,6 @@ public class Agente extends Agent {
     private HashMap<Acciones, Double> movUtiles;
     private Acciones movDecidido;
     private Posicion posAnterior; //Para dibujar rastro
-    private Acciones movRealizar;
 
     //Gráficos en el agente
     private Graficos graficos;
@@ -39,7 +38,6 @@ public class Agente extends Agent {
         this.movUtiles = new HashMap<>();
         this.memoria = new HashMap<>(); // Inicializar la memoria
         this.posAnterior = new Posicion(0, 0);
-        this.movRealizar = null;
         this.graficos = g;
     }
 
@@ -60,7 +58,6 @@ public class Agente extends Agent {
             this.movUtiles = new HashMap<>();
             this.memoria = new HashMap<>(); // Inicializar la memoria
             this.posAnterior = new Posicion(0, 0);
-            this.movRealizar = null;
             this.graficos = (Graficos) args[3];
             this.actualizarMemoria();
 
@@ -104,12 +101,12 @@ public class Agente extends Agent {
         return posObj;
     }
 
-    public void setMovRealizar(Acciones movRealizar) {
-        this.movRealizar = movRealizar;
+    public void setMovDecidido(Acciones movDecidido) {
+        this.movDecidido = movDecidido;
     }
 
-    public Acciones getMovRealizar() {
-        return movRealizar;
+    public Acciones getMovDecidido() {
+        return movDecidido;
     }
 
     private Posicion simularMovimiento(Acciones movimiento) {
