@@ -20,7 +20,7 @@ import simulacion.Graficos;
 
 public class PR2_DBA {
 
-    public static void main(String[] args) throws IOException { // mapWithComplexObstacle3.txt 7 8 9 3
+    public static void main(String[] args) throws IOException { // mapWithComplexObstacle3.txt 7 8 9 3 , mapWithDiagonalWall.txt 0 0 9 9
         try {
             // Iniciar el Main Container de JADE
             Runtime jadeRuntime = Runtime.instance();

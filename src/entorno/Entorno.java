@@ -10,9 +10,7 @@ import java.util.ArrayList;
  */
 public class Entorno {
 
-    // Varaibles
-    private static final int[] MOV_DIAGONALES = {4, 5, 6, 7};
-
+    // Variables
     private static final int ID_AGENTE = 9,
             ID_OBJETIVO = 3, RASTRO = 7;
     private Mapa mapa;
@@ -85,16 +83,16 @@ public class Entorno {
         }
 
         // Verificar y agregar movimientos diagonales
-        if (casillaDisponible(new Posicion(posAgente.getFila() - 1, posAgente.getCol() - 1))) { // Arriba-Izquierda
+        if (testDiagonal(new Posicion(posAgente.getFila() - 1, posAgente.getCol() - 1), Acciones.ARRIZQ)) { // Arriba-Izquierda
             movDisponibles.add(Acciones.ARRIZQ);
         }
-        if (casillaDisponible(new Posicion(posAgente.getFila() - 1, posAgente.getCol() + 1))) { // Arriba-Derecha
+        if (testDiagonal(new Posicion(posAgente.getFila() - 1, posAgente.getCol() + 1), Acciones.ARRDER)) { // Arriba-Derecha
             movDisponibles.add(Acciones.ARRDER);
         }
-        if (casillaDisponible(new Posicion(posAgente.getFila() + 1, posAgente.getCol() - 1))) { // Abajo-Izquierda
+        if (testDiagonal(new Posicion(posAgente.getFila() + 1, posAgente.getCol() - 1), Acciones.ABAIZQ)) { // Abajo-Izquierda
             movDisponibles.add(Acciones.ABAIZQ);
         }
-        if (casillaDisponible(new Posicion(posAgente.getFila() + 1, posAgente.getCol() + 1))) { // Abajo-Derecha
+        if (testDiagonal(new Posicion(posAgente.getFila() + 1, posAgente.getCol() + 1), Acciones.ABADER)) { // Abajo-Derecha
             movDisponibles.add(Acciones.ABADER);
         }
 
@@ -105,7 +103,7 @@ public class Entorno {
         return mapa.posCorrecta(pos);
     }
 
-    public boolean testDiagonal(Posicion pos, int mov) {
+    public boolean testDiagonal(Posicion pos, Acciones mov) {
         return mapa.movDiagonalValido(pos, mov);
     }
 

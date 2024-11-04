@@ -1,5 +1,6 @@
 package entorno;
 
+import agente.Acciones;
 import agente.Posicion;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -106,30 +107,30 @@ public class Mapa {
         return !posCorrecta(pos); // Realmente significa muro o fuera del límite
     }
 
-    public boolean movDiagonalValido(Posicion pos, int mov) { // (ej noroeste) Comprobamos que arriba y a la izquierda no haya muro y sea una pos válida
+    public boolean movDiagonalValido(Posicion pos, Acciones mov) { // (ej noroeste) Comprobamos que arriba y a la izquierda no haya muro y sea una pos válida
         switch (mov) {
-            case 4: // NOROESTE
+            case ARRIZQ: // NOROESTE
                 return (!muro(new Posicion(pos.getFila() + 1, pos.getCol())) && !muro(new Posicion(pos.getFila(), pos.getCol() + 1))
 
                         || !muro(new Posicion(pos.getFila() + 1, pos.getCol())) || !muro(new Posicion(pos.getFila(), pos.getCol() + 1)))
 
                         && !muro(pos); // La posición actual también debe ser válida
 
-            case 5: // NORESTE
+            case ARRDER: // NORESTE
                 return (!muro(new Posicion(pos.getFila() + 1, pos.getCol())) && !muro(new Posicion(pos.getFila(), pos.getCol() - 1))
 
                         || !muro(new Posicion(pos.getFila() + 1, pos.getCol())) || !muro(new Posicion(pos.getFila(), pos.getCol() - 1)))
 
                         && !muro(pos); // La posición actual también debe ser válida
 
-            case 6: // SUROESTE
+            case ABAIZQ: // SUROESTE
                 return (!muro(new Posicion(pos.getFila() - 1, pos.getCol())) && !muro(new Posicion(pos.getFila(), pos.getCol() + 1))
 
                         || !muro(new Posicion(pos.getFila() - 1, pos.getCol())) || !muro(new Posicion(pos.getFila(), pos.getCol() + 1)))
 
                         && !muro(pos); // La posición actual también debe ser válida
 
-            case 7: // SURESTE
+            case ABADER: // SURESTE
                 return (!muro(new Posicion(pos.getFila() - 1, pos.getCol())) && !muro(new Posicion(pos.getFila(), pos.getCol() - 1))
 
                         || !muro(new Posicion(pos.getFila() - 1, pos.getCol())) || !muro(new Posicion(pos.getFila(), pos.getCol() - 1)))
