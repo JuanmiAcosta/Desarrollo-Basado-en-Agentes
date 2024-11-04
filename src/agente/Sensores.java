@@ -5,6 +5,7 @@
 package agente;
 
 import entorno.Entorno;
+import agente.Acciones;
 import java.util.ArrayList;
 
 /**
@@ -31,7 +32,7 @@ public class Sensores {
     }
     
     // Metodos
-    public ArrayList<Boolean> analizarEntorno() {
+    public ArrayList<Acciones> analizarEntorno() {
         return entorno.getMovimientos(); 
     } 
 

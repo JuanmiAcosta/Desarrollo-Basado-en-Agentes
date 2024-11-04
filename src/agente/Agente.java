@@ -1,9 +1,11 @@
 package agente;
 
 import comportamientos.*;
+import agente.Acciones;
 import jade.core.Agent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import simulacion.Graficos;
 
 /**
@@ -16,11 +18,11 @@ public class Agente extends Agent {
     private Posicion posAgente,
             posObj;
     private Sensores sensores;
-    private ArrayList<Boolean> movDisponibles;
-    private ArrayList<Double> movUtiles;
-    private int movDecidido;
+    private ArrayList<Acciones> movDisponibles;
+    private HashMap<Acciones, Double> movUtiles;
+    private Acciones movDecidido;
     private Posicion posAnterior; //Para dibujar rastro
-    private int movRealizar;
+    private Acciones movRealizar;
 
     //Gráficos en el agente
     private Graficos graficos;
@@ -34,10 +36,10 @@ public class Agente extends Agent {
         this.posObj = posObjetivo;
         this.sensores = sensores;
         this.movDisponibles = new ArrayList<>();
-        this.movUtiles = new ArrayList<>();
+        this.movUtiles = new HashMap<>();
         this.memoria = new HashMap<>(); // Inicializar la memoria
         this.posAnterior = new Posicion(0, 0);
-        this.movRealizar = -1;
+        this.movRealizar = null;
         this.graficos = g;
     }
 
@@ -55,10 +57,10 @@ public class Agente extends Agent {
             this.posObj = (Posicion) args[1];
             this.sensores = (Sensores) args[2];
             this.movDisponibles = new ArrayList<>();
-            this.movUtiles = new ArrayList<>();
+            this.movUtiles = new HashMap<>();
             this.memoria = new HashMap<>(); // Inicializar la memoria
             this.posAnterior = new Posicion(0, 0);
-            this.movRealizar = -1;
+            this.movRealizar = null;
             this.graficos = (Graficos) args[3];
             this.actualizarMemoria();
 
@@ -82,7 +84,7 @@ public class Agente extends Agent {
         this.movDisponibles = sensores.analizarEntorno();
     }
 
-    public ArrayList<Double> getMovUtiles() {
+    public HashMap<Acciones, Double> getMovUtiles() {
         return this.movUtiles;
     }
 
@@ -102,61 +104,69 @@ public class Agente extends Agent {
         return posObj;
     }
 
-    public void setMovRealizar(int movRealizar) {
+    public void setMovRealizar(Acciones movRealizar) {
         this.movRealizar = movRealizar;
     }
 
-    public int getMovRealizar() {
+    public Acciones getMovRealizar() {
         return movRealizar;
     }
 
-    private Posicion simularMovimiento(int movimiento) {
-        Posicion posSiguiente = new Posicion(posAgente);
+    private Posicion simularMovimiento(Acciones movimiento) {
+        Posicion posSiguiente = new Posicion(posAgente); // Crear una copia de la posición actual
 
         switch (movimiento) {
-            case 0:
+            case ARR:
                 posSiguiente.setFila(posAgente.getFila() - 1);  // Arriba
                 break;
-            case 1:
+            case ABA:
                 posSiguiente.setFila(posAgente.getFila() + 1);  // Abajo
                 break;
-            case 2:
+            case IZQ:
                 posSiguiente.setCol(posAgente.getCol() - 1);  // Izquierda
                 break;
-            case 3:
+            case DER:
                 posSiguiente.setCol(posAgente.getCol() + 1);  // Derecha
                 break;
-            case 4:
+            case ARRIZQ:
                 posSiguiente.setFila(posAgente.getFila() - 1);  // Arriba-Izquierda
                 posSiguiente.setCol(posAgente.getCol() - 1);
                 break;
-            case 5:
+            case ARRDER:
                 posSiguiente.setFila(posAgente.getFila() - 1);  // Arriba-Derecha
                 posSiguiente.setCol(posAgente.getCol() + 1);
                 break;
-            case 6:
+            case ABAIZQ:
                 posSiguiente.setFila(posAgente.getFila() + 1);  // Abajo-Izquierda
                 posSiguiente.setCol(posAgente.getCol() - 1);
                 break;
-            case 7:
+            case ABADER:
                 posSiguiente.setFila(posAgente.getFila() + 1);  // Abajo-Derecha
                 posSiguiente.setCol(posAgente.getCol() + 1);
                 break;
+            default:
+                // Manejo de un caso inesperado (opcional)
+                throw new IllegalArgumentException("Movimiento no válido: " + movimiento);
         }
 
-        return posSiguiente;
+        return posSiguiente; // Devolver la nueva posición
     }
 
     public void movUtiles() {
-        movUtiles.clear();
+        movUtiles.clear(); // Suponiendo que movUtiles es un Map<Acciones, Double>
 
-        for (int i = 0; i < movDisponibles.size(); i++) {
-            if (!movDisponibles.get(i)) {
-                movUtiles.add(Double.MAX_VALUE);
-            } else {
-                movUtiles.add(calcularUtilidad(this.simularMovimiento(i), posObj));
-            }
+        HashMap<Acciones, Double> utilidades = new HashMap<>(); // Correcto
+
+        // Iterar sobre las acciones disponibles
+        for (Acciones accion : movDisponibles) {
+            // Simular el movimiento y calcular su utilidad
+            Posicion nuevaPos = this.simularMovimiento(accion);
+            double utilidad = calcularUtilidad(nuevaPos, posObj); // Calcular la utilidad para la nueva posición
+            utilidades.put(accion, utilidad); // Agregar al mapa
         }
+
+        // Actualizar movUtiles con las utilidades calculadas
+        movUtiles.putAll(utilidades);
     }
 
     private int distanciaManhattan(Posicion posAgente, Posicion posObj) {
@@ -179,66 +189,72 @@ public class Agente extends Agent {
         return (distanciaManhattan + distanciaEuclidea) / 2.0;
     }
 
-    public int decidirMov() {
-        int mov = -1;
-        Double minUtilidad = Double.MAX_VALUE;
+    public Acciones decidirMov() {
+        Acciones mov = null; // Inicializamos mov como null
+        double minUtilidad = Double.MAX_VALUE;
         int minVecesPasadas = Integer.MAX_VALUE;
 
-        for (int i = 0; i < movUtiles.size(); i++) {
-            Double utilidad = movUtiles.get(i);
+        // Iterar sobre las entradas en movUtiles
+        for (Map.Entry<Acciones, Double> entrada : movUtiles.entrySet()) {
+            Acciones accion = entrada.getKey();  // Obtener la acción
+            Double utilidad = entrada.getValue(); // Obtener la utilidad
 
             // Simulamos el movimiento para obtener la posición resultante
-            Posicion posSiguiente = simularMovimiento(i);
+            Posicion posSiguiente = simularMovimiento(accion);
 
             // Consultamos cuántas veces ha pasado por esta posición
             int vecesPasadas = memoria.getOrDefault(posSiguiente, 0);
 
-            if (((utilidad + vecesPasadas * vecesPasadas) < minUtilidad)) {// && (vecesPasadas <=2)) { 
-                minUtilidad = (utilidad + vecesPasadas * vecesPasadas); // penalizamos cuadráticamente
+            // Calcular la utilidad total considerando las veces pasadas
+            double utilidadTotal = utilidad + vecesPasadas * vecesPasadas; // penalizamos cuadráticamente
+
+            // Verificamos si esta es la menor utilidad total
+            if (utilidadTotal < minUtilidad) {
+                minUtilidad = utilidadTotal;
                 minVecesPasadas = vecesPasadas;
-                mov = i;
+                mov = accion; // Guardamos la acción en lugar de su índice
             }
         }
 
-        return mov;
+        return mov; // Retornar la acción elegida
     }
 
-    public void realizarMov(int mov) {
-        posAnterior = new Posicion(posAgente);
+    public void realizarMov(Acciones mov) {
+        posAnterior = new Posicion(posAgente); // Guardar la posición anterior
 
         switch (mov) {
-            case 0:
+            case ARR:
                 posAgente.setFila(posAgente.getFila() - 1);  // Arriba
                 break;
-            case 1:
+            case ABA:
                 posAgente.setFila(posAgente.getFila() + 1);  // Abajo
                 break;
-            case 2:
+            case IZQ:
                 posAgente.setCol(posAgente.getCol() - 1);  // Izquierda
                 break;
-            case 3:
+            case DER:
                 posAgente.setCol(posAgente.getCol() + 1);  // Derecha
                 break;
-            case 4:
+            case ARRIZQ:
                 posAgente.setFila(posAgente.getFila() - 1);  // Arriba-Izquierda
                 posAgente.setCol(posAgente.getCol() - 1);
                 break;
-            case 5:
+            case ARRDER:
                 posAgente.setFila(posAgente.getFila() - 1);  // Arriba-Derecha
                 posAgente.setCol(posAgente.getCol() + 1);
                 break;
-            case 6:
+            case ABAIZQ:
                 posAgente.setFila(posAgente.getFila() + 1);  // Abajo-Izquierda
                 posAgente.setCol(posAgente.getCol() - 1);
                 break;
-            case 7:
+            case ABADER:
                 posAgente.setFila(posAgente.getFila() + 1);  // Abajo-Derecha
                 posAgente.setCol(posAgente.getCol() + 1);
                 break;
         }
 
-        movDecidido = mov;
-        sensores.incrementarEnergia();
+        movDecidido = mov; // Guardar el movimiento decidido
+        sensores.incrementarEnergia(); // Incrementar energía del agente
     }
 
     // Método para actualizar la memoria del agente
@@ -258,55 +274,27 @@ public class Agente extends Agent {
 
     @Override
     public String toString() {
-        // Convertir los ArrayList a su formato legible usando direcciones descriptivas
-        String movimientos = String.format(
-                "DISPON. : { ARRIBA: %b, ABAJO: %b, IZQUIERDA: %b, DERECHA: %b, ARRIBA-IZQUIERDA: %b, ARRIBA-DERECHA: %b, ABAJO-IZQUIERDA: %b, ABAJO-DERECHA: %b }",
-                movDisponibles.get(0), movDisponibles.get(1), movDisponibles.get(2), movDisponibles.get(3),
-                movDisponibles.get(4), movDisponibles.get(5), movDisponibles.get(6), movDisponibles.get(7)
-        );
+        StringBuilder movimientosDisponibles = new StringBuilder("DISPON. : { ");
 
-        // Asumiendo que tienes un ArrayList<Double> para la utilidad de movimientos
-        String utilidadMovimientos = String.format(
-                "UTIL. : { ARRIBA: %.2e, ABAJO: %.2e, IZQUIERDA: %.2e, DERECHA: %.2e, ARRIBA-IZQUIERDA: %.2e, ARRIBA-DERECHA: %.2e, ABAJO-IZQUIERDA: %.2e, ABAJO-DERECHA: %.2e }",
-                movUtiles.get(0), movUtiles.get(1), movUtiles.get(2), movUtiles.get(3),
-                movUtiles.get(4), movUtiles.get(5), movUtiles.get(6), movUtiles.get(7)
-        );
-
-        // Convertir el valor de movDecidido en una dirección de texto descriptiva
-        String direccion;
-        switch (movDecidido) {
-            case 0:
-                direccion = "ARR.";
-                break;
-            case 1:
-                direccion = "AB.";
-                break;
-            case 2:
-                direccion = "IZQ.";
-                break;
-            case 3:
-                direccion = "DER.";
-                break;
-            case 4:
-                direccion = "ARR-IZQ";
-                break;
-            case 5:
-                direccion = "ARR-DER";
-                break;
-            case 6:
-                direccion = "AB-IZQ";
-                break;
-            case 7:
-                direccion = "AB-DER";
-                break;
-            default:
-                direccion = "INVALIDA"; // En caso de un valor inesperado
-                break;
+        // Agregar acciones disponibles junto con su utilidad
+        for (Acciones accion : Acciones.values()) {
+            // Verificar la disponibilidad usando el índice
+            if (movDisponibles.contains(accion)) {
+                double utilidad = movUtiles.get(accion); // Obtener la utilidad
+                movimientosDisponibles.append(String.format("%s: %.2e, ", accion.name(), utilidad));
+            }
         }
 
+        // Eliminar la última coma y espacio si hay acciones disponibles
+        if (movimientosDisponibles.length() > 2) {
+            movimientosDisponibles.setLength(movimientosDisponibles.length() - 2); // Quitar la última coma y espacio
+        }
+        movimientosDisponibles.append(" }");
+
+        String direccion = (movDecidido != null) ? movDecidido.name() : "INVALIDA"; // Usar name() para obtener el nombre de la acción
+
         return "Agente {"
-                + "\n   " + movimientos
-                + "\n   " + utilidadMovimientos
+                + "\n   " + movimientosDisponibles
                 + "\n   MOVIMIENTO DECIDIDO: " + direccion
                 + "\n   ENERGÍA GASTADA: " + sensores.getEnergia()
                 + "\n}";

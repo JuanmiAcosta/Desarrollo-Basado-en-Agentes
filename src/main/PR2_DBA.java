@@ -1,5 +1,6 @@
 package main;
 
+import agente.Acciones;
 import agente.Agente;
 import agente.Posicion;
 import agente.Sensores;
@@ -67,7 +68,7 @@ public class PR2_DBA {
             //Agente agente = new Agente(new Posicion(filaAgente, colAgente), new Posicion(filaObjetivo, colObjetivo), sensores);
             Entorno entorno = new Entorno(new Mapa(mapa), new Posicion(filaAgente, colAgente), new Posicion(filaObjetivo, colObjetivo));
             sensores.setEntorno(entorno);
-            Graficos graficos = new Graficos("Esperando acciones por parte del agente ...", entorno.getMapa().getMapa(), 0);
+            Graficos graficos = new Graficos("Esperando acciones por parte del agente ...", entorno.getMapa().getMapa(), Acciones.ARR);
 
             // Ruta completa de la clase del agente (asume que están en el paquete 'ejercicios')
             String claseAgente = "agente.Agente";

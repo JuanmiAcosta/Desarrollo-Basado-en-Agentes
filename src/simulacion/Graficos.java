@@ -1,5 +1,6 @@
 package simulacion;
 
+import agente.Acciones;
 import javax.swing.*;
 import java.awt.*;
 
@@ -16,9 +17,9 @@ public class Graficos extends JFrame {
     private final static int AGENTE = 9, OBJETIVO = 3, MURO = -1, SUELO = 0, CIRCULO = 7; // Agregado CIRCULO
 
     // Nuevo atributo para la dirección del agente
-    private int direccionAgente; // 0 - arriba, 1 - abajo, 2 - izquierda, 3 - derecha
+    private Acciones direccionAgente; 
 
-    public Graficos(String textoInicial, int[][] matriz, int direccionAgente) {
+    public Graficos(String textoInicial, int[][] matriz, Acciones direccionAgente) {
         this.matriz = matriz;
         this.direccionAgente = direccionAgente; // Inicializar dirección del agente
         inicializarComponentes(textoInicial);
@@ -26,7 +27,7 @@ public class Graficos extends JFrame {
     
     public Graficos(){
         this.matriz=null;
-        this.direccionAgente=-1;
+        this.direccionAgente=null;
     }
 
     private void inicializarComponentes(String textoInicial) {
@@ -112,7 +113,7 @@ public class Graficos extends JFrame {
                     int[] xPoints;
                     int[] yPoints;
                     switch (direccionAgente) {
-                        case 0: // Arriba
+                        case ARR: // Arriba
                             xPoints = new int[]{
                                 offsetX + j * anchoCelda + anchoCelda / 2,
                                 offsetX + j * anchoCelda,
@@ -124,7 +125,7 @@ public class Graficos extends JFrame {
                                 offsetY + i * altoCelda + altoCelda
                             };
                             break;
-                        case 1: // Abajo
+                        case ABA: // Abajo
                             xPoints = new int[]{
                                 offsetX + j * anchoCelda,
                                 offsetX + j * anchoCelda + anchoCelda,
@@ -136,7 +137,7 @@ public class Graficos extends JFrame {
                                 offsetY + i * altoCelda + altoCelda
                             };
                             break;
-                        case 2: // Izquierda
+                        case IZQ: // Izquierda
                             xPoints = new int[]{
                                 offsetX + j * anchoCelda + anchoCelda,
                                 offsetX + j * anchoCelda + anchoCelda,
@@ -148,7 +149,7 @@ public class Graficos extends JFrame {
                                 offsetY + i * altoCelda + altoCelda / 2
                             };
                             break;
-                        case 3: // Derecha
+                        case DER: // Derecha
                             xPoints = new int[]{
                                 offsetX + j * anchoCelda,
                                 offsetX + j * anchoCelda,
@@ -160,7 +161,7 @@ public class Graficos extends JFrame {
                                 offsetY + i * altoCelda + altoCelda / 2
                             };
                             break;
-                        case 4: // Arriba izquierda
+                        case ARRIZQ: // Arriba izquierda
                             xPoints = new int[]{
                                 offsetX + j * anchoCelda + anchoCelda,
                                 offsetX + j * anchoCelda + anchoCelda,
@@ -172,7 +173,7 @@ public class Graficos extends JFrame {
                                 offsetY + i * altoCelda + altoCelda / 2
                             };
                             break;
-                        case 5: // Arriba derecha
+                        case ARRDER: // Arriba derecha
                             xPoints = new int[]{
                                 offsetX + j * anchoCelda,
                                 offsetX + j * anchoCelda,
@@ -184,7 +185,7 @@ public class Graficos extends JFrame {
                                 offsetY + i * altoCelda + altoCelda / 2
                             };
                             break;
-                        case 6: // Abajo izquierda
+                        case ABAIZQ: // Abajo izquierda
                             xPoints = new int[]{
                                 offsetX + j * anchoCelda + anchoCelda,
                                 offsetX + j * anchoCelda + anchoCelda,
@@ -196,7 +197,7 @@ public class Graficos extends JFrame {
                                 offsetY + i * altoCelda + altoCelda / 2
                             };
                             break;
-                        case 7: // Abajo derecha
+                        case ABADER: // Abajo derecha
                             xPoints = new int[]{
                                 offsetX + j * anchoCelda,
                                 offsetX + j * anchoCelda,
@@ -245,7 +246,7 @@ public class Graficos extends JFrame {
         textAreaTraza.insert(nuevaAccion + "\n" + "--------------------------------------------------------------------------------------------\n\n\n", 0);
     }
 
-    public void actualizarMatriz(int[][] nuevaMatriz, int nuevaDireccionAgente) {
+    public void actualizarMatriz(int[][] nuevaMatriz, Acciones nuevaDireccionAgente) {
         this.matriz = nuevaMatriz;
         this.direccionAgente = nuevaDireccionAgente; // Actualizar dirección del agente
         panelMatriz.repaint(); // Redibujar el panel con la matriz actualizada
