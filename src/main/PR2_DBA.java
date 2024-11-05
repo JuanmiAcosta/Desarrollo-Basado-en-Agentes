@@ -1,7 +1,6 @@
 package main;
 
 import agente.Acciones;
-import agente.Agente;
 import agente.Posicion;
 import agente.Sensores;
 import entorno.Entorno;

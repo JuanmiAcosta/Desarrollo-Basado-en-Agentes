@@ -33,7 +33,7 @@ public class RepercusionEnt extends Behaviour {
         } catch (InterruptedException ex) {
             Logger.getLogger(RepercusionEnt.class.getName()).log(Level.SEVERE, null, ex);
         }
-        entorno.setPosAgente(agente.getPosAgente(), agente.getPosAnterior());
+        entorno.setPosAgente(agente.getPosAgente(), agente.getPosAnterior(), agente.getMemoria().get(agente.getPosAnterior()));
         entorno.getMapa().imprimirMapa();
         agente.imprimirMemoria();
         agente.getGraficos().agregarTraza(agente.toString());

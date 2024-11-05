@@ -5,6 +5,7 @@
 package comportamientos;
 
 import agente.Agente;
+import entorno.Entorno;
 import jade.core.behaviours.Behaviour;
 
 /**
@@ -13,8 +14,9 @@ import jade.core.behaviours.Behaviour;
  */
 public class Decision extends Behaviour {
     // Variables
+
     private Agente agente;
-    
+
     // Constructor
     public Decision(Agente agente) {
         this.agente = agente;

@@ -12,11 +12,11 @@ public class Entorno {
 
     // Variables
     private static final int ID_AGENTE = 9,
-            ID_OBJETIVO = 3, RASTRO = 7;
+            ID_OBJETIVO = 8;
     private Mapa mapa;
     private Posicion posAgente,
             posObjetivo;
-
+    
     // Constructor
     public Entorno(Mapa mapa, Posicion posAgente, Posicion posObjetivo) {
         this.mapa = mapa;
@@ -55,10 +55,10 @@ public class Entorno {
         this.mapa = mapa;
     }
 
-    public void setPosAgente(Posicion posAgente, Posicion posAnterior) {
+    public void setPosAgente(Posicion posAgente, Posicion posAnterior, Integer barriles) {
         this.posAgente = posAgente;
         mapa.colocarItem(posAgente, ID_AGENTE);
-        mapa.colocarItem(posAnterior, RASTRO);
+        mapa.colocarItem(posAnterior, barriles);
     }
 
     public void setPosObjetivo(Posicion posObjetivo) {
@@ -111,4 +111,5 @@ public class Entorno {
     public String toString() {
         return "Entorno{" + "mapa=" + mapa + ", posAgente=" + posAgente + ", posObjetivo=" + posObjetivo + '}';
     }
+
 }

@@ -21,6 +21,7 @@ public class Agente extends Agent {
     private ArrayList<Acciones> movDisponibles;
     private HashMap<Acciones, Double> movUtiles;
     private Acciones movDecidido;
+    
     private Posicion posAnterior; //Para dibujar rastro
 
     //Gráficos en el agente
@@ -92,7 +93,7 @@ public class Agente extends Agent {
     public Posicion getPosAnterior() {
         return posAnterior;
     }
-
+    
     public void setPosAgente(Posicion posAgente) {
         this.posAgente = posAgente;
     }
@@ -212,7 +213,7 @@ public class Agente extends Agent {
                 mov = accion; // Guardamos la acción en lugar de su índice
             }
         }
-
+        
         return mov; // Retornar la acción elegida
     }
 
@@ -303,5 +304,9 @@ public class Agente extends Agent {
 
     public Graficos getGraficos() {
         return this.graficos;
+    }
+
+    public HashMap<Posicion,Integer> getMemoria() {
+        return this.memoria;
     }
 }
