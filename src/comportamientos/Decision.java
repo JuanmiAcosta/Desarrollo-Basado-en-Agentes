@@ -25,7 +25,7 @@ public class Decision extends Behaviour {
     // Metodos
     @Override
     public void action() {
-        agente.setMovDecidido(agente.decidirMov());
+        agente.decidirMov();
     }
 
     @Override

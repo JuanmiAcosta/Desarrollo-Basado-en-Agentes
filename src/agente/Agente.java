@@ -187,7 +187,7 @@ public class Agente extends Agent {
         return (distanciaManhattan + distanciaEuclidea) / 2.0;
     }
 
-    public Acciones decidirMov() {
+    public void decidirMov() {
         Acciones mov = null; // Inicializamos mov como null
         double minUtilidad = Double.MAX_VALUE;
         int minVecesPasadas = Integer.MAX_VALUE;
@@ -214,13 +214,13 @@ public class Agente extends Agent {
             }
         }
         
-        return mov; // Retornar la acción elegida
+        this.movDecidido = mov;
     }
 
-    public void realizarMov(Acciones mov) {
+    public void realizarMov() {
         posAnterior = new Posicion(posAgente); // Guardar la posición anterior
 
-        switch (mov) {
+        switch (this.movDecidido) {
             case ARR:
                 posAgente.setFila(posAgente.getFila() - 1);  // Arriba
                 break;
@@ -251,7 +251,6 @@ public class Agente extends Agent {
                 break;
         }
 
-        movDecidido = mov; // Guardar el movimiento decidido
         sensores.incrementarEnergia(); // Incrementar energía del agente
     }
 
