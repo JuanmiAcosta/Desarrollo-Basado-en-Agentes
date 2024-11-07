@@ -42,6 +42,10 @@ public class RepercusionEnt extends Behaviour {
 
     @Override
     public boolean done() {
-        return agente.objEncontrado();
+        if (agente.objEncontrado()){
+            agente.getGraficos().mostrarVentanaVictoria();
+            return true;
+        }
+        return false;
     }
 }
