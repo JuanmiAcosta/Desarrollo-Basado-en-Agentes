@@ -187,35 +187,40 @@ public class Agente extends Agent {
         return (distanciaManhattan + distanciaEuclidea) / 2.0;
     }
 
-    public void decidirMov() {
-        Acciones mov = null; // Inicializamos mov como null
-        double minUtilidad = Double.MAX_VALUE;
-        int minVecesPasadas = Integer.MAX_VALUE;
+public void decidirMov() {
+    Acciones mov = null; // Inicializamos mov como null
+    double minUtilidad = Double.MAX_VALUE;
+    
+    Double utilidadActual = calcularUtilidad(this.posAgente,this.posObj);
 
-        // Iterar sobre las entradas en movUtiles
-        for (Map.Entry<Acciones, Double> entrada : movUtiles.entrySet()) {
-            Acciones accion = entrada.getKey();  // Obtener la acción
-            Double utilidad = entrada.getValue(); // Obtener la utilidad
 
-            // Simulamos el movimiento para obtener la posición resultante
-            Posicion posSiguiente = simularMovimiento(accion);
-
-            // Consultamos cuántas veces ha pasado por esta posición
-            int vecesPasadas = memoria.getOrDefault(posSiguiente, 0);
-
-            // Calcular la utilidad total considerando las veces pasadas
-            double utilidadTotal = utilidad + vecesPasadas * vecesPasadas; // penalizamos cuadráticamente
-
-            // Verificamos si esta es la menor utilidad total
-            if (utilidadTotal < minUtilidad) {
-                minUtilidad = utilidadTotal;
-                minVecesPasadas = vecesPasadas;
-                mov = accion; // Guardamos la acción en lugar de su índice
-            }
-        }
+    // Iterar sobre las entradas en movUtiles
+    for (Map.Entry<Acciones, Double> entrada : movUtiles.entrySet()) {
+        Acciones accion = entrada.getKey();  // Obtener la acción
+        Double utilidadSiguiente = entrada.getValue(); // Obtener la utilidad actual
         
-        this.movDecidido = mov;
+        // Simulamos el movimiento para obtener la posición resultante
+        Posicion posSiguiente = simularMovimiento(accion);
+
+        // Consultamos cuántas veces ha pasado por esta posición
+        int vecesPasadas = memoria.getOrDefault(posSiguiente, 0);
+
+        // Penalización adicional si la utilidad de la posición siguiente es peor
+        double penalizacionUtilidad = utilidadActual < utilidadSiguiente ? (utilidadSiguiente - utilidadActual)*100 : 0;
+
+        // Calcular la utilidad total considerando las penalizaciones
+        double utilidadTotal = utilidadSiguiente + 150 * vecesPasadas + penalizacionUtilidad;
+
+        // Verificamos si esta es la menor utilidad total
+        if (utilidadTotal < minUtilidad) {
+            minUtilidad = utilidadTotal;
+            mov = accion; // Guardamos la acción
+        }
     }
+
+    this.movDecidido = mov;
+}
+
 
     public void realizarMov() {
         posAnterior = new Posicion(posAgente); // Guardar la posición anterior

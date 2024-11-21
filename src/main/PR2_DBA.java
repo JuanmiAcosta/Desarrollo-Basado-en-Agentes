@@ -17,9 +17,22 @@ import java.io.IOException;
 import java.util.Scanner;
 import simulacion.Graficos;
 
+/*
+
+mapWithoutObstacle.txt 9 9 0 0 -> 9 energía -> Otra versión 9
+mapWithVerticalWall.txt 9 9 7 3 -> 54 energía -> Otra versión 40
+mapWithHorizontalWall.txt 9 5 3 5 -> 10 energía -> Otra versión 8
+mapWithDiagonalWall.txt 9 9 9 0 -> 9 energía -> Otra versión 9
+mapWithComplexObstacle1.txt 9 6 5 6 -> 11 energía -> Otra versión 9
+mapWithComplexObstacle2.txt 9 6 3 6 -> 27 energía -> Otra versión 14
+mapWithComplexObstacle3.txt 6 6 9 4 -> 46 energía -> Otra versión 31
+mapComplex.txt 29 14 15 14 -> 277 energía -> Otra versión 124
+
+*/
+
 public class PR2_DBA {
 
-    public static void main(String[] args) throws IOException { // mapWithComplexObstacle3.txt 7 8 9 3 , mapWithDiagonalWall.txt 0 0 9 9 , mapChungo.txt 1 1 18 18
+    public static void main(String[] args) throws IOException {
         try {
             // Iniciar el Main Container de JADE
             Runtime jadeRuntime = Runtime.instance();
