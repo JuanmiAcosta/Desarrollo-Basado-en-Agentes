@@ -18,3 +18,24 @@ nb-configuration.xml
 *.war
 *.ear
 
+# Ignorar configuraciones específicas de NetBeans en todos los subdirectorios
+**/nbproject/private/
+**/nbbuild/
+**/dist/
+**/nbdist/
+**/build/
+**/nbactions.xml
+**/nb-configuration.xml
+
+# Ignorar archivos generados por NetBeans
+**/nbproject/project.properties
+
+# Ignorar archivos de clases compilados
+**/*.class
+
+# Ignorar paquetes generados
+**/*.jar
+**/*.war
+**/*.ear
+
+
