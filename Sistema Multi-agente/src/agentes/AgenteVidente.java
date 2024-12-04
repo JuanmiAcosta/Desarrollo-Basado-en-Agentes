@@ -1,13 +1,18 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package agentes;
 
-/**
- *
- * @author juanmi
- */
-public class AgenteVidente {
+import jade.core.Agent;
+import comportamientos.ComunicacionVidente;
+import utiles.GestorDF;
+
+public class AgenteVidente extends Agent {
+            
+    @Override
+    protected void setup() {
+        System.out.println("Agente Vidente iniciado: " + getLocalName());
+        
+        GestorDF.registrarAgente(this, "aldeano", "vidente");
+        
+        addBehaviour(new ComunicacionVidente(this));
+    }
     
 }

@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Objects;
 
 /**
  *
@@ -69,8 +70,10 @@ public class Mapa {
     }
 
     public void colocarItem(Posicion pos, int idItem) {
-        if (posCorrecta(pos)) {
-            mapa[pos.getFila()][pos.getCol()] = idItem;
+        if (!Objects.isNull(pos)) {
+            if (posCorrecta(pos) && !(Objects.isNull(pos))) {
+                mapa[pos.getFila()][pos.getCol()] = idItem;
+            }
         }
     }
 
@@ -99,7 +102,7 @@ public class Mapa {
     public boolean posCorrecta(Posicion pos) {
         return (pos.getFila() >= 0 && pos.getFila() < filas)
                 && (pos.getCol() >= 0 && pos.getCol() < columnas)
-                && (mapa[pos.getFila()][pos.getCol()] >= 0 );
+                && (mapa[pos.getFila()][pos.getCol()] >= 0);
     }
 
     public boolean muro(Posicion pos) {
@@ -110,30 +113,22 @@ public class Mapa {
         switch (mov) {
             case ARRIZQ: // NOROESTE
                 return (!muro(new Posicion(pos.getFila() + 1, pos.getCol())) && !muro(new Posicion(pos.getFila(), pos.getCol() + 1))
-
                         || !muro(new Posicion(pos.getFila() + 1, pos.getCol())) || !muro(new Posicion(pos.getFila(), pos.getCol() + 1)))
-
                         && !muro(pos); // La posición actual también debe ser válida
 
             case ARRDER: // NORESTE
                 return (!muro(new Posicion(pos.getFila() + 1, pos.getCol())) && !muro(new Posicion(pos.getFila(), pos.getCol() - 1))
-
                         || !muro(new Posicion(pos.getFila() + 1, pos.getCol())) || !muro(new Posicion(pos.getFila(), pos.getCol() - 1)))
-
                         && !muro(pos); // La posición actual también debe ser válida
 
             case ABAIZQ: // SUROESTE
                 return (!muro(new Posicion(pos.getFila() - 1, pos.getCol())) && !muro(new Posicion(pos.getFila(), pos.getCol() + 1))
-
                         || !muro(new Posicion(pos.getFila() - 1, pos.getCol())) || !muro(new Posicion(pos.getFila(), pos.getCol() + 1)))
-
                         && !muro(pos); // La posición actual también debe ser válida
 
             case ABADER: // SURESTE
                 return (!muro(new Posicion(pos.getFila() - 1, pos.getCol())) && !muro(new Posicion(pos.getFila(), pos.getCol() - 1))
-
                         || !muro(new Posicion(pos.getFila() - 1, pos.getCol())) || !muro(new Posicion(pos.getFila(), pos.getCol() - 1)))
-
                         && !muro(pos); // La posición actual también debe ser válida
 
             default:

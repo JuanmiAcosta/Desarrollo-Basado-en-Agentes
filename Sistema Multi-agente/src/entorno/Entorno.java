@@ -3,6 +3,7 @@ package entorno;
 import utiles.Acciones;
 import utiles.Posicion;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  *
@@ -18,7 +19,7 @@ public class Entorno {
     private Posicion posAgente;
     private Posicion posJarl;
     private ArrayList<Posicion> posObjetivos;
-    
+
     // Constructor
     public Entorno(Mapa mapa, Posicion posAgente, Posicion posJarl, ArrayList<Posicion> posObjetivos) {
         this.mapa = mapa;
@@ -40,10 +41,13 @@ public class Entorno {
     private void inicializarEntorno() {
         mapa.colocarItem(posAgente, ID_AGENTE);
         mapa.colocarItem(posJarl, ID_JARL);
-        
-        for ( Posicion objetivo : posObjetivos){
-            mapa.colocarItem(objetivo, ID_OBJETIVO);
+
+        if (!Objects.isNull(posObjetivos)) {
+            for (Posicion objetivo : posObjetivos) {
+                mapa.colocarItem(objetivo, ID_OBJETIVO);
+            }
         }
+
     }
 
     public Mapa getMapa() {
@@ -113,11 +117,11 @@ public class Entorno {
     @Override
     public String toString() {
         String str_a_devolver = "Entorno{" + "mapa=" + mapa + ", posAgente=" + posAgente + ", ";
-        for (Posicion objetivo : posObjetivos){
+        for (Posicion objetivo : posObjetivos) {
             str_a_devolver += " objetivo: " + objetivo.toString();
         }
         return str_a_devolver;
-        
+
     }
 
 }

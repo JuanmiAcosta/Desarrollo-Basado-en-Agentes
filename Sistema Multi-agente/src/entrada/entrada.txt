@@ -1,0 +1,1 @@
+mapWithoutObstacle.txt 9 9

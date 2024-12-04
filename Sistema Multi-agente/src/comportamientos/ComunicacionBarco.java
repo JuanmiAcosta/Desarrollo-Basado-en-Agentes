@@ -2,6 +2,7 @@ package comportamientos;
 
 import agentes.AgenteBarco;
 import estados.EstadosBarco;
+import static estados.EstadosBarco.INICIO_MISION;
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import jade.core.behaviours.Behaviour;
@@ -20,13 +21,31 @@ public class ComunicacionBarco extends Behaviour {
         super(agent);
         this.agente = agent;
         this.paso = EstadosBarco.INICIO_MISION;
-
+        this.prepararParaComunicaciones();
     }
-    
-    private void inicializarAgentes(){
-        // Buscar los agentes del DF
-        AID[] agentes = GestorDF.buscarAgentes(this.agente, "aldeano");
-        
+
+    private void prepararParaComunicaciones() {
+
+        boolean todosLosAgentesRegistrados = false;
+        AID[] agentes = null;
+
+        while (!todosLosAgentesRegistrados) {
+
+            // Buscar los agentes del DF
+            agentes = GestorDF.buscarAgentes(this.agente, "aldeano");
+
+            if (agentes.length == 3) { // Número esperado de servicios
+                todosLosAgentesRegistrados = true;
+            } else {
+                try {
+                    Thread.sleep(100); // Esperar 1 segundo antes de volver a buscar
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
         this.jarl = GestorDF.buscarAgenteEnLista(agentes, "jarl");
         this.skal = GestorDF.buscarAgenteEnLista(agentes, "skal");
         this.vidente = GestorDF.buscarAgenteEnLista(agentes, "vidente");
@@ -35,15 +54,20 @@ public class ComunicacionBarco extends Behaviour {
     @Override
     public void action() {
 
-        switch (this.paso) {
-            case INICIO_MISION:
-                
-                break;
-            default:
-                System.out.println("[Barco] Error: Estado desconocido.");
-                myAgent.doDelete();
-                break;
+        if (agente.getPosObj() == null) {
+            switch (this.paso) {
+                case INICIO_MISION:
+                    System.out.println("El barco está listo");
+                    myAgent.doDelete();
+
+                    break;
+                default:
+                    System.out.println("[Barco] Error: Estado desconocido.");
+                    myAgent.doDelete();
+                    break;
+            }
         }
+
     }
 
     @Override
