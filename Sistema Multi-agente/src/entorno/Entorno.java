@@ -1,7 +1,7 @@
 package entorno;
 
-import agente.Acciones;
-import agente.Posicion;
+import utiles.Acciones;
+import utiles.Posicion;
 import java.util.ArrayList;
 
 /**
@@ -12,31 +12,38 @@ public class Entorno {
 
     // Variables
     private static final int ID_AGENTE = 9,
-            ID_OBJETIVO = 8;
+            ID_OBJETIVO = 8,
+            ID_JARL = 7;
     private Mapa mapa;
-    private Posicion posAgente,
-            posObjetivo;
+    private Posicion posAgente;
+    private Posicion posJarl;
+    private ArrayList<Posicion> posObjetivos;
     
     // Constructor
-    public Entorno(Mapa mapa, Posicion posAgente, Posicion posObjetivo) {
+    public Entorno(Mapa mapa, Posicion posAgente, Posicion posJarl, ArrayList<Posicion> posObjetivos) {
         this.mapa = mapa;
         this.posAgente = posAgente;
-        this.posObjetivo = posObjetivo;
+        this.posJarl = posJarl;
+        this.posObjetivos = posObjetivos;
         inicializarEntorno();
     }
 
     public Entorno() {
-        this(null, new Posicion(0, 0), new Posicion(0, 0));
+        this(null, new Posicion(0, 0), new Posicion(0, 0), null);
     }
 
     public Entorno(Entorno otroEntorno) {
-        this(otroEntorno.mapa, otroEntorno.posAgente, otroEntorno.posObjetivo);
+        this(otroEntorno.mapa, otroEntorno.posAgente, otroEntorno.posJarl, otroEntorno.posObjetivos);
     }
 
     // Metodos
     private void inicializarEntorno() {
         mapa.colocarItem(posAgente, ID_AGENTE);
-        mapa.colocarItem(posObjetivo, ID_OBJETIVO);
+        mapa.colocarItem(posJarl, ID_JARL);
+        
+        for ( Posicion objetivo : posObjetivos){
+            mapa.colocarItem(objetivo, ID_OBJETIVO);
+        }
     }
 
     public Mapa getMapa() {
@@ -47,8 +54,8 @@ public class Entorno {
         return posAgente;
     }
 
-    public Posicion getPosObjetivo() {
-        return posObjetivo;
+    public ArrayList<Posicion> getPosObjetivos() {
+        return posObjetivos;
     }
 
     public void setMapa(Mapa mapa) {
@@ -59,10 +66,6 @@ public class Entorno {
         this.posAgente = posAgente;
         mapa.colocarItem(posAgente, ID_AGENTE);
         mapa.colocarItem(posAnterior, barriles);
-    }
-
-    public void setPosObjetivo(Posicion posObjetivo) {
-        this.posObjetivo = posObjetivo;
     }
 
     public ArrayList<Acciones> getMovimientos() {
@@ -109,7 +112,12 @@ public class Entorno {
 
     @Override
     public String toString() {
-        return "Entorno{" + "mapa=" + mapa + ", posAgente=" + posAgente + ", posObjetivo=" + posObjetivo + '}';
+        String str_a_devolver = "Entorno{" + "mapa=" + mapa + ", posAgente=" + posAgente + ", ";
+        for (Posicion objetivo : posObjetivos){
+            str_a_devolver += " objetivo: " + objetivo.toString();
+        }
+        return str_a_devolver;
+        
     }
 
 }

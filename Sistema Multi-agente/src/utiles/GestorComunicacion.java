@@ -1,10 +1,10 @@
-package utils;
+package utiles;
 
 /**
  *
  * @author juanmi
  */
-public class CheckMensajes {
+public class GestorComunicacion {     
 
     public Boolean checkMensajeBarco(String msg) {
         return (msg.startsWith("Bro") && msg.endsWith("En plan."));

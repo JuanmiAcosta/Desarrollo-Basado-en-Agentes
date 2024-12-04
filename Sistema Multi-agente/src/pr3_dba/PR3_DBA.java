@@ -6,7 +6,7 @@ import jade.core.Runtime;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
-import utils.CheckMensajes;
+import utiles.GestorComunicacion;
 
 /**
  *
@@ -60,7 +60,7 @@ public class PR3_DBA {
             e.printStackTrace();
         }*/
         
-        CheckMensajes checkMensajes = new CheckMensajes();
+        GestorComunicacion checkMensajes = new GestorComunicacion();
 
         // Mensaje de prueba para checkMensajeBarco
         String mensajeBarco = "Bro, este es un mensaje de prueba. En plan.";
