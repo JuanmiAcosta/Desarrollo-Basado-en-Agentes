@@ -25,9 +25,9 @@ public class AgenteBarco extends Agent {
     private ArrayList<Acciones> movDisponibles;
     private HashMap<Acciones, Double> movUtiles;
     private Acciones movDecidido;
-    
+
     private Posicion posAnterior; //Para dibujar rastro
-    
+
     private Boolean misionAcabada = false;
 
     //Gráficos en el agente
@@ -56,6 +56,8 @@ public class AgenteBarco extends Agent {
     @Override
     public void setup() { //Omite const. con parámetros y usa el sin parámetros
 
+        System.out.println("Agente Barco iniciado: " + getLocalName());
+
         Object[] args = getArguments();
         if (args != null && args.length >= 4) {
             this.posAgente = (Posicion) args[0];
@@ -73,7 +75,7 @@ public class AgenteBarco extends Agent {
             doDelete(); // Eliminar agente si los parámetros son insuficientes
             return;
         }
-        
+
         GestorDF.registrarAgente(this, "explorador", "barco-vikingo");
 
         addBehaviour(new AnalisisEntorno(this));        // Behaviour 1: Analisis del entorno
@@ -102,7 +104,7 @@ public class AgenteBarco extends Agent {
     public Posicion getPosAnterior() {
         return posAnterior;
     }
-    
+
     public void setPosAgente(Posicion posAgente) {
         this.posAgente = posAgente;
     }
@@ -158,12 +160,12 @@ public class AgenteBarco extends Agent {
 
         return posSiguiente; // Devolver la nueva posición
     }
-    
-    public void setMisionAcabada(){
+
+    public void setMisionAcabada() {
         this.misionAcabada = true;
     }
-    
-    public Boolean getMisionAcabada(){
+
+    public Boolean getMisionAcabada() {
         return this.misionAcabada;
     }
 
@@ -204,40 +206,38 @@ public class AgenteBarco extends Agent {
         return (distanciaManhattan + distanciaEuclidea) / 2.0;
     }
 
-public void decidirMov() {
-    Acciones mov = null; // Inicializamos mov como null
-    double minUtilidad = Double.MAX_VALUE;
-    
-    Double utilidadActual = calcularUtilidad(this.posAgente,this.posObj);
+    public void decidirMov() {
+        Acciones mov = null; // Inicializamos mov como null
+        double minUtilidad = Double.MAX_VALUE;
 
+        Double utilidadActual = calcularUtilidad(this.posAgente, this.posObj);
 
-    // Iterar sobre las entradas en movUtiles
-    for (Map.Entry<Acciones, Double> entrada : movUtiles.entrySet()) {
-        Acciones accion = entrada.getKey();  // Obtener la acción
-        Double utilidadSiguiente = entrada.getValue(); // Obtener la utilidad actual
-        
-        // Simulamos el movimiento para obtener la posición resultante
-        Posicion posSiguiente = simularMovimiento(accion);
+        // Iterar sobre las entradas en movUtiles
+        for (Map.Entry<Acciones, Double> entrada : movUtiles.entrySet()) {
+            Acciones accion = entrada.getKey();  // Obtener la acción
+            Double utilidadSiguiente = entrada.getValue(); // Obtener la utilidad actual
 
-        // Consultamos cuántas veces ha pasado por esta posición
-        int vecesPasadas = memoria.getOrDefault(posSiguiente, 0);
+            // Simulamos el movimiento para obtener la posición resultante
+            Posicion posSiguiente = simularMovimiento(accion);
 
-        // Penalización adicional si la utilidad de la posición siguiente es peor
-        double penalizacionUtilidad = utilidadActual < utilidadSiguiente ? (utilidadSiguiente - utilidadActual)*100 : 0;
+            // Consultamos cuántas veces ha pasado por esta posición
+            int vecesPasadas = memoria.getOrDefault(posSiguiente, 0);
 
-        // Calcular la utilidad total considerando las penalizaciones
-        double utilidadTotal = utilidadSiguiente + 150 * vecesPasadas + penalizacionUtilidad;
+            // Penalización adicional si la utilidad de la posición siguiente es peor
+            double penalizacionUtilidad = utilidadActual < utilidadSiguiente ? (utilidadSiguiente - utilidadActual) * 100 : 0;
 
-        // Verificamos si esta es la menor utilidad total
-        if (utilidadTotal < minUtilidad) {
-            minUtilidad = utilidadTotal;
-            mov = accion; // Guardamos la acción
+            // Calcular la utilidad total considerando las penalizaciones
+            double utilidadTotal = utilidadSiguiente + 150 * vecesPasadas + penalizacionUtilidad;
+
+            // Verificamos si esta es la menor utilidad total
+            if (utilidadTotal < minUtilidad) {
+                minUtilidad = utilidadTotal;
+                mov = accion; // Guardamos la acción
+            }
         }
+
+        this.movDecidido = mov;
     }
-
-    this.movDecidido = mov;
-}
-
 
     public void realizarMov() {
         posAnterior = new Posicion(posAgente); // Guardar la posición anterior
@@ -327,7 +327,7 @@ public void decidirMov() {
         return this.graficos;
     }
 
-    public HashMap<Posicion,Integer> getMemoria() {
+    public HashMap<Posicion, Integer> getMemoria() {
         return this.memoria;
     }
 }

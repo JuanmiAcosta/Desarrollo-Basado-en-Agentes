@@ -15,7 +15,7 @@ public class Graficos extends JFrame {
     private JTextArea textAreaTraza;
     private JPanel panelMatriz;
 
-    private final static int AGENTE = 9, OBJETIVO = 8, MURO = -1, SUELO = 0, SUELO1 = 1, SUELO2 = 2, SUELO3 = 3;
+    private final static int AGENTE = 9, OBJETIVO = 8, JARL = 7, MURO = -1, SUELO = 0, SUELO1 = 1, SUELO2 = 2, SUELO3 = 3;
 
     private Acciones direccionAgente;
 
@@ -46,6 +46,7 @@ public class Graficos extends JFrame {
             imagenes.put(SUELO3, ImageIO.read(getClass().getResource("/assets/SUELO3.png")));
             imagenes.put(MURO, ImageIO.read(getClass().getResource("/assets/MURO.png")));
             imagenes.put(OBJETIVO, ImageIO.read(getClass().getResource("/assets/OBJETIVO.png")));
+            imagenes.put(JARL, ImageIO.read(getClass().getResource("/assets/JARL.png")));
             imagenesAgente.put(Acciones.ARR, ImageIO.read(getClass().getResource("/assets/ARR.png")));
             imagenesAgente.put(Acciones.ABA, ImageIO.read(getClass().getResource("/assets/ABA.png")));
             imagenesAgente.put(Acciones.IZQ, ImageIO.read(getClass().getResource("/assets/IZQ.png")));
