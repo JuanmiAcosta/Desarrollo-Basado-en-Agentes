@@ -330,4 +330,8 @@ public class AgenteBarco extends Agent {
     public HashMap<Posicion, Integer> getMemoria() {
         return this.memoria;
     }
+    
+    public void borrarMemoria(){
+        this.memoria.clear();
+    }
 }
