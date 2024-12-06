@@ -61,7 +61,8 @@ public class ComunicacionSkal extends Behaviour {
                 msg = agente.blockingReceive();
                 
                 if(msg != null && msg.getPerformative() == ACLMessage.REQUEST) {
-                    if(msg.getSender() == barco && GestorComunicacion.checkMensajeBarco(msg.getContent())) {
+
+                    if(msg.getSender().equals(barco)){ 
                         System.out.println("[" + agente.getLocalName() + "] Recibido REQUEST de Barco Vikingo");
                     
                         // Traduccion del mensaje
@@ -71,7 +72,6 @@ public class ComunicacionSkal extends Behaviour {
                         msg = msg.createReply();
                         msg.setPerformative(ACLMessage.INFORM);
                         msg.setContent(mensajeTraducido);
-                        // msg.setInReplyTo("presentation-request");
                         agente.send(msg);
                         agente.getGraficos().agregarTraza(msg.toString());
                     }
