@@ -6,15 +6,15 @@ package utiles;
  */
 public class GestorComunicacion {     
 
-    public Boolean checkMensajeBarco(String msg) {
+    public static Boolean checkMensajeBarco(String msg) {
         return (msg.startsWith("Bro") && msg.endsWith("En plan."));
     }
 
-    public Boolean checkMensajeJarl(String msg) {
+    public static Boolean checkMensajeJarl(String msg) {
         return (msg.startsWith("Joulupukki") && msg.endsWith("Kiitos."));
     }
 
-    public String traduceBarcoJarl(String msg) {
+    public static String traduceBarcoJarl(String msg) {
         String finalMsg = msg;
         if (finalMsg.startsWith("Bro")) {
             finalMsg = finalMsg.replaceFirst("Bro", "Joulupukki");
