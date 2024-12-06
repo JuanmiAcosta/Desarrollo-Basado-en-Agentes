@@ -2,7 +2,6 @@ package comportamientos;
 
 import agentes.AgenteBarco;
 import estados.EstadosBarco;
-import static estados.EstadosBarco.INICIO_MISION;
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import jade.core.behaviours.Behaviour;
@@ -10,6 +9,7 @@ import utiles.GestorDF;
 
 public class ComunicacionBarco extends Behaviour {
 
+    private final String CONV_BARCO_SKAL_ID = "barco-skal-conv";
     private EstadosBarco paso;
     private AgenteBarco agente;
     private Boolean finish = false;
@@ -54,11 +54,23 @@ public class ComunicacionBarco extends Behaviour {
     @Override
     public void action() {
 
+        ACLMessage msg;
+
         if (agente.getPosObj() == null) {
+
             switch (this.paso) {
                 case INICIO_MISION:
-                    System.out.println("El barco está listo");
-                    myAgent.doDelete();
+
+                    msg = new ACLMessage(ACLMessage.REQUEST);
+                    msg.addReceiver(this.skal);
+                    msg.setReplyWith("presentation-request");
+                    msg.setContent("Bro, estoy listo para encontrar a la tripulación perdida. En plan.");
+                    msg.setConversationId(CONV_BARCO_SKAL_ID);
+                    myAgent.send(msg);
+
+                    //System.out.println("[Master] Enviado REQUEST a todos los esclavos.");
+                    this.agente.getGraficos().agregarTraza(msg.toString());
+                    this.paso = EstadosBarco.ESPERANDO_TRADUCCION_INICIO;
 
                     break;
                 default:
