@@ -5,10 +5,12 @@ import estados.EstadosJarl;
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import jade.core.behaviours.Behaviour;
+import utiles.GestorComunicacion;
 import utiles.GestorDF;
 
 public class ComunicacionJarl extends Behaviour {
 
+    private final String CONV_BARCO_JARL_ID = "barco-vikingo-vidente-conv";
     private EstadosJarl paso;
     private AgenteJarl agente;
     private Boolean finish = false;
@@ -48,12 +50,40 @@ public class ComunicacionJarl extends Behaviour {
 
     @Override
     public void action() {
-
+        ACLMessage msgBarco;
+        String mensajeConfirm;
+        
         switch (this.paso) {
             case ESPERANDO_INICIO_CONV:
-                System.out.println("El Jarl está listo");
-                myAgent.doDelete();
-
+                msgBarco = agente.blockingReceive();
+                
+                if(msgBarco != null && msgBarco.getPerformative() == ACLMessage.PROPOSE) {
+                    if(msgBarco.getSender().equals(barco) && GestorComunicacion.checkMensajeBarco(msgBarco.getContent())) {
+                        System.out.println("[" + agente.getLocalName() + "] Recibido PROPOSE de Barco Vikingo");
+                        
+                        if(esBarcoDigno()) {
+                            // Crear mensaje de confirmacion
+                            mensajeConfirm = 
+                            
+                            // Enviar CONFIRM al barco
+                            msgBarco = msgBarco.createReply(ACLMessage.CONFIRM);
+                            msgBarco.setContent()
+                            
+                        }
+                        else {
+                            // Enviar DISCONFIRM
+                            
+                        }
+                    }
+                    else {
+                        System.out.println("No entiendo lo que me quieres decir");
+                    }
+                }
+                else {
+                    System.out.println();
+                }
+                
+                
                 break;
             default:
                 System.out.println("[Jarl] Error: Estado desconocido.");
@@ -65,5 +95,9 @@ public class ComunicacionJarl extends Behaviour {
     @Override
     public boolean done() {
         return this.finish;
+    }
+
+    private boolean esBarcoDigno() {
+        return ((int) (Math.random() * 11)) < 8;
     }
 }

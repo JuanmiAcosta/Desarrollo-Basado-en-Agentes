@@ -13,6 +13,19 @@ public class GestorComunicacion {
     public static Boolean checkMensajeJarl(String msg) {
         return (msg.startsWith("Joulupukki") && msg.endsWith("Kiitos."));
     }
+    
+    public static String jarlConfirmaDigno(Boolean confirma) {
+        String msg;
+        
+        if(confirma) {
+            
+        }
+        else {
+            
+        }
+        
+        return msg;
+    }
 
     public static String traduceBarcoJarl(String msg) {
         String finalMsg = msg;
@@ -24,5 +37,8 @@ public class GestorComunicacion {
         }
         return finalMsg;
     }
-
-}
+    
+    public static String traduceJarlBarco(String msg) {
+        
+    }
+} 
