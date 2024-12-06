@@ -28,4 +28,7 @@ public class AgenteSkal extends Agent {
         addBehaviour(new ComunicacionSkal(this));
     }
     
+    public Graficos getGraficos() {
+        return g;
+    }
 }
