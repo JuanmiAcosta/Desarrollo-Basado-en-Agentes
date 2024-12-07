@@ -17,6 +17,8 @@ public class ComunicacionSkal extends Behaviour {
 
     private AID barco;
     private AID jarl;
+    
+    private ACLMessage msgBarco, msgJarl;
 
     public ComunicacionSkal(AgenteSkal agent) {
         super(agent);
@@ -58,8 +60,6 @@ public class ComunicacionSkal extends Behaviour {
 
     @Override
     public void action() {
-        ACLMessage msgBarco;
-        ACLMessage msgJarl;
         String mensajeTraducido;
         
         switch (this.paso) {
@@ -79,9 +79,10 @@ public class ComunicacionSkal extends Behaviour {
                         msgBarco.setContent(mensajeTraducido);
                         agente.send(msgBarco);
                         agente.getGraficos().agregarTraza(msgBarco.toString());
+                        this.paso = EstadosSkal.ESPERANDO_JARL_INICIO;
                     }
                     else {
-                        System.out.println("No entiendo lo que me quieres decir");
+                        System.out.println("No entiendo lo que me quieres decir soy Skal");
                     }
                 }
                 else {
@@ -106,9 +107,10 @@ public class ComunicacionSkal extends Behaviour {
                         msgJarl.setContent(mensajeTraducido);
                         agente.send(msgJarl);
                         agente.getGraficos().agregarTraza(msgJarl.toString());
+                        // HAY QUE CAMBIAR DE PASO
                     }
                     else {
-                        System.out.println("No entiendo lo que me quieres decir");
+                        System.out.println("No entiendo lo que me quieres decir, soy Skal");
                     }
                 }
                 else {

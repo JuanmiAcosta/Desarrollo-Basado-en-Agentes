@@ -20,6 +20,8 @@ public class ComunicacionBarco extends Behaviour {
     private AID jarl;
     private AID skal;
     private AID vidente;
+    
+    private ACLMessage msgSkal, msgJarl, msgVidente;
 
     public ComunicacionBarco(AgenteBarco agent) {
         super(agent);
@@ -58,10 +60,6 @@ public class ComunicacionBarco extends Behaviour {
     @Override
     public void action() {
 
-        ACLMessage msgSkal;
-        ACLMessage msgJarl;
-        ACLMessage msgVidente;
-
         if (agente.getPosObj() == null) {
 
             switch (this.paso) {
@@ -99,6 +97,7 @@ public class ComunicacionBarco extends Behaviour {
                             msgJarl.setConversationId(CONV_BARCO_JARL_ID);
                             myAgent.send(msgJarl);
                             agente.getGraficos().agregarTraza(msgJarl.toString());
+                            this.paso = EstadosBarco.ESPERANDO_TOTEM_JARL;
 
                         } else {
                             System.out.println("No entiendo lo que me quieres decir");
@@ -117,33 +116,35 @@ public class ComunicacionBarco extends Behaviour {
 
                             // Jarl me da el token
                             CONV_BARCO_VIDENTE_ID = msgJarl.getContent();
-                            
+
                             // Le mando mensaje al vidente
                             
-                        }else{
+                            // HAY QUE CAMBIAR DE PASO
                             
+                        } else {
+
                             System.out.println("No esperaba ese mensaje en este momento");
-                            
+
                         }
 
                         // Enviar REQUEST a vidente
                     } else if (msgJarl != null && msgJarl.getPerformative() == ACLMessage.DISCONFIRM) {
-                        
+
                         if (msgJarl.getSender().equals(jarl) && GestorComunicacion.checkMensajeBarco(msgJarl.getContent())) {
 
-                               // Se termina el programa
-                               System.exit(0);
-                            
-                        }else{
-                            
-                            System.out.println("No esperaba ese mensaje en este momento");
-                            
+                            // Se termina el programa
+                            System.exit(0);
+
+                        } else {
+
+                            System.out.println("No esperaba ese mensaje en este momento soy barco");
+
                         }
 
                     } else {
                         System.out.println("Error esperando CONFIRM / DISCONFIRM en: " + agente.getLocalName());
                     }
-                    
+
                     break;
 
                 default:

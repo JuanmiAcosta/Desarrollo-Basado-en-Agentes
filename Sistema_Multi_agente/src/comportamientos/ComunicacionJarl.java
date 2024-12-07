@@ -14,9 +14,12 @@ public class ComunicacionJarl extends Behaviour {
     private EstadosJarl paso;
     private AgenteJarl agente;
     private Boolean finish = false;
+    
+    private Boolean esDigno = false;
 
-    private AID barco,
-                            skal;
+    private AID barco, skal;
+    
+    private ACLMessage msgBarco, msgSkal;
 
     public ComunicacionJarl(AgenteJarl agent) {
         super(agent);
@@ -54,22 +57,20 @@ public class ComunicacionJarl extends Behaviour {
 
     @Override
     public void action() {
-        ACLMessage msgBarco = new ACLMessage(),
-                                   msgSkal;
+        
         String mensajeConfirm;
-        Boolean esDigno = false;
         
         switch (this.paso) {
             case ESPERANDO_ENVIO_BARCO:
                 msgBarco = agente.blockingReceive();
                 
                 if(msgBarco != null && msgBarco.getPerformative() == ACLMessage.PROPOSE) {
-                    if(msgBarco.getSender().equals(barco) && GestorComunicacion.checkMensajeBarco(msgBarco.getContent())) {
+                    if(msgBarco.getSender().equals(barco) && GestorComunicacion.checkMensajeJarl(msgBarco.getContent())) {
                         System.out.println("[" + agente.getLocalName() + "] Recibido PROPOSE de Barco Vikingo");
                         
                          // Crear mensaje de confirmacion o denegación
                          esDigno = esBarcoDigno();
-                         mensajeConfirm = GestorComunicacion.jarlConfirmaDigno(esBarcoDigno(), CONV_BARCO_JARL_ID);
+                         mensajeConfirm = GestorComunicacion.jarlConfirmaDigno(esDigno, CONV_BARCO_JARL_ID);
                             
                          // Enviar CONFIRM o DISCONFIRM al barco
                          msgSkal = new ACLMessage(ACLMessage.REQUEST);
@@ -82,7 +83,7 @@ public class ComunicacionJarl extends Behaviour {
                          paso = EstadosJarl.ESPERANDO_RESP_SKAL;
                     }
                     else {
-                        System.out.println("No entiendo lo que me quieres decir");
+                        System.out.println("No entiendo lo que me quieres decir, soy Jarl");
                     }
                 }
                 else {
@@ -95,7 +96,7 @@ public class ComunicacionJarl extends Behaviour {
                 msgSkal = agente.blockingReceive();
                 
                 if(msgSkal != null && msgSkal.getPerformative() == ACLMessage.INFORM) {
-                    if(msgSkal.getSender().equals(skal) && GestorComunicacion.checkMensajeBarco(msgSkal.getContent())) {
+                    if(msgSkal.getSender().equals(skal)) {
                         // Envio de mensaje traducido al barco
                         if(esDigno) {
                             msgBarco = msgBarco.createReply(ACLMessage.CONFIRM);
@@ -106,7 +107,8 @@ public class ComunicacionJarl extends Behaviour {
                         
                         msgBarco.setContent(msgSkal.getContent());
                         agente.send(msgBarco);
-                         agente.getGraficos().agregarTraza(msgBarco.toString());
+                        agente.getGraficos().agregarTraza(msgBarco.toString());
+                        // HAY QUE CAMBIAR DE PASO
                     }
                     else {
                         System.out.println("No entiendo lo que me quieres decir");
@@ -131,6 +133,7 @@ public class ComunicacionJarl extends Behaviour {
     }
 
     private boolean esBarcoDigno() {
-        return ((int) (Math.random() * 11)) < 8;
+        int numDigno = ((int) (Math.random() * 11));
+        return (numDigno < 8);
     }
 }
