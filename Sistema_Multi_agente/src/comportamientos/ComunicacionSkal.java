@@ -16,6 +16,7 @@ public class ComunicacionSkal extends Behaviour {
     private Boolean finish = false;
 
     private AID barco;
+    private AID jarl;
 
     public ComunicacionSkal(AgenteSkal agent) {
         super(agent);
@@ -28,13 +29,16 @@ public class ComunicacionSkal extends Behaviour {
 
         boolean todosLosAgentesRegistrados = false;
         AID[] agentes = null;
+        AID[] agentesAld = null;
 
         while (!todosLosAgentesRegistrados) {
 
             // Buscar los agentes del DF. 
             // En este caso va a buscar el agente explorador que solo hay 1 
             agentes = GestorDF.buscarAgentes(this.agente, "explorador");
-            if (agentes.length == 1) { // Número esperado de servicios
+            agentesAld = GestorDF.buscarAgentes(this.agente, "aldeano");
+            
+            if (agentes.length == 1 && agentesAld.length == 3) { // Número esperado de servicios
                 todosLosAgentesRegistrados = true;
             } else {
                 try {
@@ -49,31 +53,32 @@ public class ComunicacionSkal extends Behaviour {
         // A partir de los agentes buscados se comrpueba si entre ellos 
         // está el barco vikingo
         this.barco = GestorDF.buscarAgenteEnLista(agentes, "barco-vikingo");
+        this.jarl = GestorDF.buscarAgenteEnLista(agentesAld , "jarl");
     }
 
     @Override
     public void action() {
-        ACLMessage msg;
+        ACLMessage msgBarco;
+        ACLMessage msgJarl;
         String mensajeTraducido;
         
         switch (this.paso) {
             case ESPERANDO_MENSAJE_INICIO:
-                msg = agente.blockingReceive();
+                msgBarco = agente.blockingReceive();
                 
-                if(msg != null && msg.getPerformative() == ACLMessage.REQUEST) {
+                if(msgBarco != null && msgBarco.getPerformative() == ACLMessage.REQUEST) {
 
-                    if(msg.getSender().equals(barco)){ 
+                    if(msgBarco.getSender().equals(barco)){ 
                         System.out.println("[" + agente.getLocalName() + "] Recibido REQUEST de Barco Vikingo");
                     
                         // Traduccion del mensaje
-                        mensajeTraducido = GestorComunicacion.traduceBarcoJarl(msg.getContent());
+                        mensajeTraducido = GestorComunicacion.traduceBarcoJarl(msgBarco.getContent());
 
                         // Enviar INFORM al barco vikingo
-                        msg = msg.createReply();
-                        msg.setPerformative(ACLMessage.INFORM);
-                        msg.setContent(mensajeTraducido);
-                        agente.send(msg);
-                        agente.getGraficos().agregarTraza(msg.toString());
+                        msgBarco = msgBarco.createReply(ACLMessage.INFORM);
+                        msgBarco.setContent(mensajeTraducido);
+                        agente.send(msgBarco);
+                        agente.getGraficos().agregarTraza(msgBarco.toString());
                     }
                     else {
                         System.out.println("No entiendo lo que me quieres decir");
@@ -84,6 +89,35 @@ public class ComunicacionSkal extends Behaviour {
                 }
 
                 break;
+                
+            case ESPERANDO_JARL_INICIO:
+                msgJarl = agente.blockingReceive();
+                
+                if(msgJarl != null && msgJarl.getPerformative() == ACLMessage.REQUEST) {
+
+                    if(msgJarl.getSender().equals(jarl)){ 
+                        System.out.println("[" + agente.getLocalName() + "] Recibido REQUEST de Jarl");
+                    
+                        // Traduccion del mensaje
+                        mensajeTraducido = GestorComunicacion.traduceJarlBarco(msgJarl.getContent());
+
+                        // Enviar INFORM al barco vikingo
+                        msgJarl = msgJarl.createReply(ACLMessage.INFORM);
+                        msgJarl.setContent(mensajeTraducido);
+                        agente.send(msgJarl);
+                        agente.getGraficos().agregarTraza(msgJarl.toString());
+                    }
+                    else {
+                        System.out.println("No entiendo lo que me quieres decir");
+                    }
+                }
+                else {
+                    System.out.println("Error esperando REQUEST en: " + agente.getLocalName());
+                }
+
+                break;
+                
+                
             default:
                 System.out.println("[Skal] Error: Estado desconocido.");
                 myAgent.doDelete();
