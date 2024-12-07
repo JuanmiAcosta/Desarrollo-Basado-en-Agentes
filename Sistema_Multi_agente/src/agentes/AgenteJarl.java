@@ -32,4 +32,8 @@ public class AgenteJarl extends Agent {
         addBehaviour(new ComunicacionJarl(this));
     }
     
+    public Graficos getGraficos() {
+        return g;
+    }
+    
 }
