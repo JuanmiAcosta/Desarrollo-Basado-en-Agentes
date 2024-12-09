@@ -170,12 +170,6 @@ public class ComunicacionBarco extends Behaviour {
                         posObjetivo = obtenerPosicionDeMsg(coord);
                         this.agente.setPosObjetivo(posObjetivo);
                         
-                        //Mandarle un mensaje para pedirle las próximas coordenadas
-                        //msgVidente.createReply(ACLMessage.REQUEST);
-                        //msgVidente.setContent("Bro, tengo el amuleto de Jarl. Dame las siguientes En plan.");     
-                        //agente.send(msgVidente);
-                        //agente.getGraficos().agregarTraza(msgVidente.toString());
-                        
                         this.paso = EstadosBarco.SOLICITAR_NUEVA_COORD_NAUF;
 
                     } else if (msgVidente != null && msgVidente.getPerformative() == ACLMessage.REFUSE) {
@@ -192,7 +186,7 @@ public class ComunicacionBarco extends Behaviour {
                     
                 case SOLICITAR_NUEVA_COORD_NAUF:
                     
-                    msgVidente.createReply(ACLMessage.REQUEST);
+                    msgVidente = msgVidente.createReply(ACLMessage.REQUEST);
                     msgVidente.setContent("Bro, tengo el amuleto de Jarl. Dame las siguientes En plan.");     
                     agente.send(msgVidente);
                     agente.getGraficos().agregarTraza(msgVidente.toString());

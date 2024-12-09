@@ -336,6 +336,8 @@ public class AgenteBarco extends Agent {
     }
     
     public void borrarMemoria(){
-        this.memoria.clear();
+        for (Posicion key : memoria.keySet()) {
+            memoria.put(key, 0);
+        }
     }
 }
