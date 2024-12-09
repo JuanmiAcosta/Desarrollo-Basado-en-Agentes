@@ -51,8 +51,6 @@ public class ComunicacionVidente extends Behaviour {
 
         switch (this.paso) {
             case ESPERANDO_PETICION_COORD:
-                System.out.println("El vidente está listo");
-                myAgent.doDelete();
 
                 break;
             default:

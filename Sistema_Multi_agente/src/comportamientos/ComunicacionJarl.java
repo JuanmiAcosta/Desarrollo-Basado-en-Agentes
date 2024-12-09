@@ -66,7 +66,6 @@ public class ComunicacionJarl extends Behaviour {
                 
                 if(msgBarco != null && msgBarco.getPerformative() == ACLMessage.PROPOSE) {
                     if(msgBarco.getSender().equals(barco) && GestorComunicacion.checkMensajeJarl(msgBarco.getContent())) {
-                        System.out.println("[" + agente.getLocalName() + "] Recibido PROPOSE de Barco Vikingo");
                         
                          // Crear mensaje de confirmacion o denegación
                          esDigno = esBarcoDigno();

@@ -69,7 +69,6 @@ public class ComunicacionSkal extends Behaviour {
                 if(msgBarco != null && msgBarco.getPerformative() == ACLMessage.REQUEST) {
 
                     if(msgBarco.getSender().equals(barco)){ 
-                        System.out.println("[" + agente.getLocalName() + "] Recibido REQUEST de Barco Vikingo");
                     
                         // Traduccion del mensaje
                         mensajeTraducido = GestorComunicacion.traduceBarcoJarl(msgBarco.getContent());
@@ -96,9 +95,7 @@ public class ComunicacionSkal extends Behaviour {
                 
                 if(msgJarl != null && msgJarl.getPerformative() == ACLMessage.REQUEST) {
 
-                    if(msgJarl.getSender().equals(jarl)){ 
-                        System.out.println("[" + agente.getLocalName() + "] Recibido REQUEST de Jarl");
-                    
+                    if(msgJarl.getSender().equals(jarl)){                     
                         // Traduccion del mensaje
                         mensajeTraducido = GestorComunicacion.traduceJarlBarco(msgJarl.getContent());
 
