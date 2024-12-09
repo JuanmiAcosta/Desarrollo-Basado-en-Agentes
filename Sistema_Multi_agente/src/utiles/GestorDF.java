@@ -67,7 +67,6 @@ public class GestorDF {
     public static void desregistrarAgente(Agent agente) {
         try {
             DFService.deregister(agente);
-            System.out.println(agente.getLocalName() + " desregistrado del DF.");
         } catch (FIPAException e) {
             System.err.println("Error desregistrando el agente " + agente.getLocalName() + ": " + e.getMessage());
         }
@@ -88,7 +87,7 @@ public class GestorDF {
 
         for (AID agente : agentes) {
             if (agente.getLocalName().equalsIgnoreCase(nombre)) {
-                System.out.println("Agente encontrado: " + agente.getName());
+                //System.out.println("Agente encontrado: " + agente.getName());
                 return agente;
             }
         }

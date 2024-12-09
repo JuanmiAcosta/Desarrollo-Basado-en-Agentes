@@ -93,7 +93,7 @@ public class PR3_DBA { //  mapWithoutObstacle.txt 9 9
             String barcoVikingoClass = "agentes.AgenteBarco";
             AgentController barcoVikingoController = mainContainer.createNewAgent(barcoVikingoName, barcoVikingoClass, argsAgent);
             barcoVikingoController.start();
-            System.out.println("Agente " + barcoVikingoController + " iniciado.");
+            //System.out.println("Agente " + barcoVikingoController + " iniciado.");
 
             // Crear el agente Skal (traductor)
             Object[] argsSkal = new Object[]{graficos};
@@ -102,7 +102,7 @@ public class PR3_DBA { //  mapWithoutObstacle.txt 9 9
             String skalClass = "agentes.AgenteSkal";
             AgentController skalController = mainContainer.createNewAgent(skalName, skalClass, argsSkal);
             skalController.start();
-            System.out.println("Agente " + skalController + " iniciado.");
+            //System.out.println("Agente " + skalController + " iniciado.");
 
             // Crear el agente Jarl
             Object[] argsJarl = new Object[]{new Posicion(filJarl, colJarl), graficos};
@@ -111,7 +111,7 @@ public class PR3_DBA { //  mapWithoutObstacle.txt 9 9
             String jarlClass = "agentes.AgenteJarl";
             AgentController jarlController = mainContainer.createNewAgent(jarlName, jarlClass, argsJarl);
             jarlController.start();
-            System.out.println("Agente " + jarlController + " iniciado.");
+            //System.out.println("Agente " + jarlController + " iniciado.");
 
             // Crear el agente barco vikingo
             Object[] argsVidente = new Object[]{graficos};
@@ -120,7 +120,7 @@ public class PR3_DBA { //  mapWithoutObstacle.txt 9 9
             String videnteClass = "agentes.AgenteVidente";
             AgentController videnteController = mainContainer.createNewAgent(videnteName, videnteClass, argsVidente);
             videnteController.start();
-            System.out.println("Agente " + videnteController + " iniciado.");
+            //System.out.println("Agente " + videnteController + " iniciado.");
 
         } catch (StaleProxyException e) {
             e.printStackTrace();
