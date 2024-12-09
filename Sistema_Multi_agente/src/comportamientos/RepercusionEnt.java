@@ -40,8 +40,10 @@ public class RepercusionEnt extends Behaviour {
             entorno.setPosAgente(agente.getPosAgente(), agente.getPosAnterior(), agente.getMemoria().get(agente.getPosAnterior()));
             entorno.getMapa().imprimirMapa();
             agente.imprimirMemoria();
-            //agente.getGraficos().agregarTraza(agente.toString());
             agente.getGraficos().actualizarMatriz(agente.getSensores().getEntorno().getMapa().getMapa(), agente.getMovDecidido());
+            
+            //Cuando encontramos un objetivo pasamos su posición a null para seguir con comunicaciones
+            this.agente.setPosObjetivo(null);
         }
     }
 

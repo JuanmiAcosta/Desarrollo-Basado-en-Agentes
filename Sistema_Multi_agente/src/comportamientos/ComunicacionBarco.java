@@ -7,6 +7,7 @@ import jade.lang.acl.ACLMessage;
 import jade.core.behaviours.Behaviour;
 import utiles.GestorComunicacion;
 import utiles.GestorDF;
+import utiles.Posicion;
 
 public class ComunicacionBarco extends Behaviour {
 
@@ -20,7 +21,7 @@ public class ComunicacionBarco extends Behaviour {
     private AID jarl;
     private AID skal;
     private AID vidente;
-    
+
     private ACLMessage msgSkal, msgJarl, msgVidente;
 
     public ComunicacionBarco(AgenteBarco agent) {
@@ -125,10 +126,11 @@ public class ComunicacionBarco extends Behaviour {
                             msgVidente.setContent("Bro, tengo el amuleto de Jarl. ¿Puedes ayudarme a encontrar a la tripulación? En plan.");
                             msgVidente.setConversationId(CONV_BARCO_VIDENTE_ID);
                             myAgent.send(msgVidente);
-                            
+                            agente.getGraficos().agregarTraza(msgVidente.toString());
+
                             // HAY QUE CAMBIAR DE PASOó
-                            this.paso = EstadosBarco.ESPERANDO_COORD_NAUFRAGOS;    
-                            
+                            this.paso = EstadosBarco.ESPERANDO_COORD_NAUFRAGOS;
+
                         } else {
 
                             System.out.println("No esperaba ese mensaje en este momento");
@@ -154,10 +156,32 @@ public class ComunicacionBarco extends Behaviour {
                     }
 
                     break;
-                    
+
                 case ESPERANDO_COORD_NAUFRAGOS:
-                    
+
                     msgVidente = agente.blockingReceive();
+
+                    if (msgVidente != null && msgVidente.getPerformative() == ACLMessage.AGREE) {
+
+                        String coord = GestorComunicacion.obtenerTotem(msgVidente.getContent());
+                        Posicion posObjetivo = obtenerPosicionDeMsg(coord);
+                        this.agente.setPosObjetivo(posObjetivo);
+
+                    } else if (msgVidente != null && msgVidente.getPerformative() == ACLMessage.REFUSE) {
+                        
+                        this.paso = EstadosBarco.SOLICITAR_COORD_JARL;
+
+                    } else if (msgVidente != null && msgVidente.getPerformative() == ACLMessage.NOT_UNDERSTOOD) {
+
+                        System.out.println("Soy el barco, Jarl me ha timado con el totem :( ");
+                        System.exit(0);
+
+                    }
+                    break;
+                    
+                case SOLICITAR_COORD_JARL:
+                    
+                    myAgent.doDelete();
 
                 default:
                     System.out.println("[Barco] Error: Estado desconocido.");
@@ -172,4 +196,12 @@ public class ComunicacionBarco extends Behaviour {
     public boolean done() {
         return this.finish;
     }
+
+    private Posicion obtenerPosicionDeMsg(String posString) {
+        String[] coords = posString.split(",");
+        int filas = Integer.parseInt(coords[0]);
+        int cols = Integer.parseInt(coords[1]);
+        return new Posicion(filas,cols);
+    }
+
 }

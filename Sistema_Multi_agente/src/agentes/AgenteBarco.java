@@ -108,6 +108,10 @@ public class AgenteBarco extends Agent {
     public void setPosAgente(Posicion posAgente) {
         this.posAgente = posAgente;
     }
+    
+    public void setPosObjetivo(Posicion posObjetivo){
+        this.posObj = posObjetivo;
+    }
 
     public Posicion getPosObj() {
         return posObj;
