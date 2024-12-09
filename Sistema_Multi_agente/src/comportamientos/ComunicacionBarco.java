@@ -60,8 +60,6 @@ public class ComunicacionBarco extends Behaviour {
     @Override
     public void action() {
 
-        ACLMessage msg;
-
         if (agente.getPosObj() == null) {
 
             switch (this.paso) {
@@ -117,7 +115,8 @@ public class ComunicacionBarco extends Behaviour {
                         if (msgJarl.getSender().equals(jarl) && GestorComunicacion.checkMensajeBarco(msgJarl.getContent())) {
 
                             // Jarl me da el token
-                            CONV_BARCO_VIDENTE_ID = msgJarl.getContent();
+                            String contentJarl = msgJarl.getContent();
+                            CONV_BARCO_VIDENTE_ID = GestorComunicacion.obtenerTotem(contentJarl);
 
                             // Le mando mensaje al vidente
                             msgVidente = new ACLMessage(ACLMessage.REQUEST);
@@ -155,6 +154,10 @@ public class ComunicacionBarco extends Behaviour {
                     }
 
                     break;
+                    
+                case ESPERANDO_COORD_NAUFRAGOS:
+                    
+                    msgVidente = agente.blockingReceive();
 
                 default:
                     System.out.println("[Barco] Error: Estado desconocido.");
