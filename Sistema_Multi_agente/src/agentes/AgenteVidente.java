@@ -17,7 +17,7 @@ public class AgenteVidente extends Agent {
         System.out.println("Agente Vidente iniciado: " + getLocalName());
         
         Object[] args = getArguments();
-        if (args != null && args.length == 1) {
+        if (args != null && args.length == 2) {
             this.g = (Graficos) args[0];
             this.posNaufragos = (ArrayList<Posicion>) args[1];
         } else {

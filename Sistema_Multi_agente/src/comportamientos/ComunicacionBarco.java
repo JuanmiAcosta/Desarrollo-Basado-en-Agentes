@@ -21,6 +21,9 @@ public class ComunicacionBarco extends Behaviour {
     private AID jarl;
     private AID skal;
     private AID vidente;
+    
+    private String coord;
+    private Posicion posObjetivo;
 
     private ACLMessage msgSkal, msgJarl, msgVidente;
 
@@ -158,14 +161,22 @@ public class ComunicacionBarco extends Behaviour {
                     break;
 
                 case ESPERANDO_COORD_NAUFRAGOS:
-
+                    
                     msgVidente = agente.blockingReceive();
 
                     if (msgVidente != null && msgVidente.getPerformative() == ACLMessage.AGREE) {
-
-                        String coord = GestorComunicacion.obtenerTotem(msgVidente.getContent());
-                        Posicion posObjetivo = obtenerPosicionDeMsg(coord);
+                        
+                        coord = GestorComunicacion.obtenerTotem(msgVidente.getContent());
+                        posObjetivo = obtenerPosicionDeMsg(coord);
                         this.agente.setPosObjetivo(posObjetivo);
+                        
+                        //Mandarle un mensaje para pedirle las próximas coordenadas
+                        //msgVidente.createReply(ACLMessage.REQUEST);
+                        //msgVidente.setContent("Bro, tengo el amuleto de Jarl. Dame las siguientes En plan.");     
+                        //agente.send(msgVidente);
+                        //agente.getGraficos().agregarTraza(msgVidente.toString());
+                        
+                        this.paso = EstadosBarco.SOLICITAR_NUEVA_COORD_NAUF;
 
                     } else if (msgVidente != null && msgVidente.getPerformative() == ACLMessage.REFUSE) {
                         
@@ -179,6 +190,16 @@ public class ComunicacionBarco extends Behaviour {
                     }
                     break;
                     
+                case SOLICITAR_NUEVA_COORD_NAUF:
+                    
+                    msgVidente.createReply(ACLMessage.REQUEST);
+                    msgVidente.setContent("Bro, tengo el amuleto de Jarl. Dame las siguientes En plan.");     
+                    agente.send(msgVidente);
+                    agente.getGraficos().agregarTraza(msgVidente.toString());
+                    
+                    this.paso = EstadosBarco.ESPERANDO_COORD_NAUFRAGOS;
+                    break;
+                    
                 case SOLICITAR_COORD_JARL:
                     
                     myAgent.doDelete();
@@ -189,6 +210,8 @@ public class ComunicacionBarco extends Behaviour {
                     break;
             }
         }
+        
+        System.out.println(this.agente.getPosObj());
 
     }
 

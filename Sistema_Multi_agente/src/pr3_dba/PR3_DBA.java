@@ -68,7 +68,7 @@ public class PR3_DBA { //  mapWithoutObstacle.txt 9 9
                         }
 
                     } else {
-                        System.out.println("Error: La línea en el archivo debe contener exactamente 3 parámetros.");
+                        System.out.println("Error: La línea en el archivo debe contener exactamente 6 parámetros.");
                         return;
                     }
                 } else {

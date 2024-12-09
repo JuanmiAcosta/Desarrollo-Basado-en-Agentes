@@ -33,7 +33,7 @@ public class RepercusionEnt extends Behaviour {
         if (agente.getPosObj() != null) {
 
             try {
-                Thread.sleep(500);
+                Thread.sleep(150);
             } catch (InterruptedException ex) {
                 Logger.getLogger(RepercusionEnt.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -43,7 +43,11 @@ public class RepercusionEnt extends Behaviour {
             agente.getGraficos().actualizarMatriz(agente.getSensores().getEntorno().getMapa().getMapa(), agente.getMovDecidido());
             
             //Cuando encontramos un objetivo pasamos su posición a null para seguir con comunicaciones
-            this.agente.setPosObjetivo(null);
+            if (this.agente.objEncontrado()){
+                this.agente.setPosObjetivo(null);
+                this.agente.borrarMemoria();
+            }
+            
         }
     }
 

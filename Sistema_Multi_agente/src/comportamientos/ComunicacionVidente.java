@@ -55,13 +55,18 @@ public class ComunicacionVidente extends Behaviour {
     public void action() {
 
         switch (this.paso) {
+            
             case ESPERANDO_INICIO_BARCO:
+                
                 msgBarco = agente.blockingReceive();
+                System.out.println(msgBarco.toString());
                 String posNaufrago = "Bro, no quedan náufragos. En plan.";
                 Posicion pos = new Posicion();
 
                 if (msgBarco != null && msgBarco.getPerformative() == ACLMessage.REQUEST) {
+                    
                     if (msgBarco.getSender().equals(barco) && GestorComunicacion.checkMensajeBarco(msgBarco.getContent())) {
+                        
                         if (!msgBarco.getConversationId().equals(CONV_BARCO_VIDENTE_ID)) {      // Si no es el codigo correcto
                             msgBarco = msgBarco.createReply(ACLMessage.NOT_UNDERSTOOD);
                             msgBarco.setContent("Bro, no puedo ayudarte. En plan.");
@@ -76,7 +81,7 @@ public class ComunicacionVidente extends Behaviour {
                             // Obtiene la posicion del naufrago
                             pos = agente.getPosNaufragos().getFirst();
                             agente.getPosNaufragos().removeFirst();
-                            posNaufrago = "[" + pos.getFila() + ", " + pos.getCol() + "]";
+                            posNaufrago = "[" + pos.getFila() + "," + pos.getCol() + "]";
                             
                             // Comunica la posicion del naufrago al barco
                             msgBarco.setContent("Bro, acepto. La ubicación está en las coordenadas " + posNaufrago + ". En plan.");
