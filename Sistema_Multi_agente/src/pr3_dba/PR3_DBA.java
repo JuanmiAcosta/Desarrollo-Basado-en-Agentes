@@ -113,8 +113,8 @@ public class PR3_DBA { //  mapWithoutObstacle.txt 9 9
             jarlController.start();
             //System.out.println("Agente " + jarlController + " iniciado.");
 
-            // Crear el agente barco vikingo
-            Object[] argsVidente = new Object[]{graficos};
+            // Crear el agente vidente
+            Object[] argsVidente = new Object[]{graficos, posNaufragos};
 
             String videnteName = "vidente";
             String videnteClass = "agentes.AgenteVidente";
