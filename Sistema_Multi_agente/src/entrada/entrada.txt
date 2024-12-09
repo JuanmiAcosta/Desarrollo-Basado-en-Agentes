@@ -1,1 +1,9 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
+mapWithoutObstacle.txt 9 9 0 0 3 2 3 4 5 7 8 
+=======
 mapChungo.txt 9 9 1 1 3 2 3 4 5 7 8 
+>>>>>>> 420164d80940b30c5f7760dcd17a12d3312219d5
+=======
+mapChungo.txt 9 9 1 1 3 2 3 4 5 7 8 
+>>>>>>> Comunicación-Barco-Juanmi

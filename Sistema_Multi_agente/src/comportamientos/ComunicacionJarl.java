@@ -12,6 +12,7 @@ public class ComunicacionJarl extends Behaviour {
 
     private final String CONV_BARCO_VIDENTE_ID = "barco-vikingo-vidente-conv";
     private final String CONV_BARCO_JARL_ID = "barco-jarl-conv";
+
     private EstadosJarl paso;
     private AgenteJarl agente;
     private Boolean finish = false;
