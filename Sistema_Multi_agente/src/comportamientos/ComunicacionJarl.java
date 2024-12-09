@@ -10,7 +10,8 @@ import utiles.GestorDF;
 
 public class ComunicacionJarl extends Behaviour {
 
-    private final String CONV_BARCO_JARL_ID = "barco-vikingo-vidente-conv";
+    private final String CONV_BARCO_VIDENTE_ID = "barco-vikingo-vidente-conv";
+    private final String CONV_BARCO_JARL_ID = "barco-jarl-conv";
     private EstadosJarl paso;
     private AgenteJarl agente;
     private Boolean finish = false;
@@ -69,7 +70,7 @@ public class ComunicacionJarl extends Behaviour {
                         
                          // Crear mensaje de confirmacion o denegación
                          esDigno = esBarcoDigno();
-                         mensajeConfirm = GestorComunicacion.jarlConfirmaDigno(esDigno, CONV_BARCO_JARL_ID);
+                         mensajeConfirm = GestorComunicacion.jarlConfirmaDigno(esDigno, CONV_BARCO_VIDENTE_ID);
                             
                          // Enviar CONFIRM o DISCONFIRM al barco
                          msgSkal = new ACLMessage(ACLMessage.REQUEST);

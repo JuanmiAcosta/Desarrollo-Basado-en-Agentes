@@ -1,5 +1,8 @@
 package utiles;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  *
  * @author juanmi
@@ -53,5 +56,12 @@ public class GestorComunicacion {
         }
 
         return finalMsg;
+    }
+    
+    public static String obtenerTotem(String msg){
+        Pattern pattern = Pattern.compile("\\[(.*?)\\]");
+        Matcher matcher = pattern.matcher(msg);
+        matcher.find();
+        return matcher.group(1);
     }
 }
