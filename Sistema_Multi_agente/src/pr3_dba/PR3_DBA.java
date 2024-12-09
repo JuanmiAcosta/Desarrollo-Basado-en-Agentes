@@ -12,6 +12,7 @@ import jade.wrapper.StaleProxyException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 import simulacion.Graficos;
 import utiles.Acciones;
@@ -40,6 +41,10 @@ public class PR3_DBA { //  mapWithoutObstacle.txt 9 9
             String mapaSeleccionado = "";
             int filaAgente = 0;
             int colAgente = 0;
+            int filJarl = 0;
+            int colJarl = 0;
+            int numNaufragos = 0;
+            ArrayList<Posicion> posNaufragos = new ArrayList<Posicion>();
 
             try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
                 // Leer la primera línea del archivo
@@ -49,11 +54,19 @@ public class PR3_DBA { //  mapWithoutObstacle.txt 9 9
                     String[] inputs = linea.split(" ");
 
                     // Verificar que la línea contiene exactamente 3 parámetros
-                    if (inputs.length == 3) {
+                    if (inputs.length >= 6) {
                         // Asignar los valores a las variables
                         mapaSeleccionado = inputs[0];
                         filaAgente = Integer.parseInt(inputs[1]);
                         colAgente = Integer.parseInt(inputs[2]);
+                        filJarl = Integer.parseInt(inputs[3]);
+                        colJarl = Integer.parseInt(inputs[4]);
+                        numNaufragos = Integer.parseInt(inputs[5]);
+
+                        for (int i = 1; i < numNaufragos + 1; i++) {
+                            posNaufragos.add(new Posicion(Integer.parseInt(inputs[5 + (1 * i)]), Integer.parseInt(inputs[5 + (2 * i)])));
+                        }
+
                     } else {
                         System.out.println("Error: La línea en el archivo debe contener exactamente 3 parámetros.");
                         return;
@@ -69,9 +82,9 @@ public class PR3_DBA { //  mapWithoutObstacle.txt 9 9
 
             Mapa mapa = new Mapa("ejemplos_mapas/" + mapaSeleccionado);
             Sensores sensores = new Sensores(0);
-            Entorno entorno = new Entorno(new Mapa(mapa), new Posicion(filaAgente, colAgente), null, null);
+            Entorno entorno = new Entorno(new Mapa(mapa), new Posicion(filaAgente, colAgente), new Posicion(filJarl, colJarl), posNaufragos);
             sensores.setEntorno(entorno);
-            Graficos graficos = new Graficos("Esperando acciones por parte del agente ...", entorno.getMapa().getMapa(), Acciones.ARR);
+            Graficos graficos = new Graficos("Esperando conversaciones de los agentes ...", entorno.getMapa().getMapa(), Acciones.ARR);
 
             Object[] argsAgent = new Object[]{new Posicion(filaAgente, colAgente), null, sensores, graficos};
 
@@ -80,28 +93,34 @@ public class PR3_DBA { //  mapWithoutObstacle.txt 9 9
             String barcoVikingoClass = "agentes.AgenteBarco";
             AgentController barcoVikingoController = mainContainer.createNewAgent(barcoVikingoName, barcoVikingoClass, argsAgent);
             barcoVikingoController.start();
-            System.out.println("Agente " + barcoVikingoController + " iniciado.");
+            //System.out.println("Agente " + barcoVikingoController + " iniciado.");
 
             // Crear el agente Skal (traductor)
+            Object[] argsSkal = new Object[]{graficos};
+
             String skalName = "skal";
             String skalClass = "agentes.AgenteSkal";
-            AgentController skalController = mainContainer.createNewAgent(skalName, skalClass, null);
+            AgentController skalController = mainContainer.createNewAgent(skalName, skalClass, argsSkal);
             skalController.start();
-            System.out.println("Agente " + skalController + " iniciado.");
+            //System.out.println("Agente " + skalController + " iniciado.");
 
             // Crear el agente Jarl
+            Object[] argsJarl = new Object[]{new Posicion(filJarl, colJarl), graficos};
+
             String jarlName = "jarl";
             String jarlClass = "agentes.AgenteJarl";
-            AgentController jarlController = mainContainer.createNewAgent(jarlName, jarlClass, null);
+            AgentController jarlController = mainContainer.createNewAgent(jarlName, jarlClass, argsJarl);
             jarlController.start();
-            System.out.println("Agente " + jarlController + " iniciado.");
+            //System.out.println("Agente " + jarlController + " iniciado.");
 
             // Crear el agente barco vikingo
+            Object[] argsVidente = new Object[]{graficos};
+
             String videnteName = "vidente";
             String videnteClass = "agentes.AgenteVidente";
-            AgentController videnteController = mainContainer.createNewAgent(videnteName, videnteClass, null);
+            AgentController videnteController = mainContainer.createNewAgent(videnteName, videnteClass, argsVidente);
             videnteController.start();
-            System.out.println("Agente " + videnteController + " iniciado.");
+            //System.out.println("Agente " + videnteController + " iniciado.");
 
         } catch (StaleProxyException e) {
             e.printStackTrace();

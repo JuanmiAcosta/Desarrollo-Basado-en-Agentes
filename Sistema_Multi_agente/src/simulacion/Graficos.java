@@ -15,7 +15,10 @@ public class Graficos extends JFrame {
     private JTextArea textAreaTraza;
     private JPanel panelMatriz;
 
-    private final static int AGENTE = 9, OBJETIVO = 8, MURO = -1, SUELO = 0, SUELO1 = 1, SUELO2 = 2, SUELO3 = 3;
+    private int panelWidth = 1000;
+    private int panelHeight = 1000;
+
+    private final static int AGENTE = 9, OBJETIVO = 8, JARL = 7, MURO = -1, SUELO = 0, SUELO1 = 1, SUELO2 = 2, SUELO3 = 3;
 
     private Acciones direccionAgente;
 
@@ -46,6 +49,7 @@ public class Graficos extends JFrame {
             imagenes.put(SUELO3, ImageIO.read(getClass().getResource("/assets/SUELO3.png")));
             imagenes.put(MURO, ImageIO.read(getClass().getResource("/assets/MURO.png")));
             imagenes.put(OBJETIVO, ImageIO.read(getClass().getResource("/assets/OBJETIVO.png")));
+            imagenes.put(JARL, ImageIO.read(getClass().getResource("/assets/JARL.png")));
             imagenesAgente.put(Acciones.ARR, ImageIO.read(getClass().getResource("/assets/ARR.png")));
             imagenesAgente.put(Acciones.ABA, ImageIO.read(getClass().getResource("/assets/ABA.png")));
             imagenesAgente.put(Acciones.IZQ, ImageIO.read(getClass().getResource("/assets/IZQ.png")));
@@ -62,13 +66,13 @@ public class Graficos extends JFrame {
 
     private void inicializarComponentes(String textoInicial) {
         setTitle("Simulación del Agente");
-        setSize(1200, 800); // Aumento del tamaño de la ventana
+        setSize(1800, 1000);  // Tamaño inicial de la ventana
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setResizable(false);
-        setLayout(new BorderLayout());
+        setResizable(true);  // Hacer la ventana redimensionable
+        setLayout(new BorderLayout());  // Usamos BorderLayout
 
-        // Configuración del panel para la matriz con tamaño más amplio
+        // Panel del mapa (PanelMatriz)
         panelMatriz = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -76,20 +80,25 @@ public class Graficos extends JFrame {
                 dibujarMatriz(g);
             }
         };
-        panelMatriz.setPreferredSize(new Dimension(800, 800)); // Tamaño aumentado para ocupar más espacio
-        panelMatriz.setBackground(Color.WHITE);
+        panelMatriz.setPreferredSize(new Dimension(1200, 800));  // Tamaño del panel del mapa
+        panelMatriz.setBackground(Color.BLACK);
 
-        // Configuración del área de texto para la traza con tamaño reducido
+        // Area de texto para la traza (TextAreaTraza)
         textAreaTraza = new JTextArea();
         textAreaTraza.setEditable(false);
         textAreaTraza.setText(textoInicial);
         textAreaTraza.setLineWrap(true);
         textAreaTraza.setWrapStyleWord(true);
         JScrollPane scrollPaneTraza = new JScrollPane(textAreaTraza);
-        scrollPaneTraza.setPreferredSize(new Dimension(400, 800)); // Ancho reducido para ocupar menos espacio
+        scrollPaneTraza.setPreferredSize(new Dimension(400, 800));  // Tamaño ajustado del área de trazas
 
-        add(panelMatriz, BorderLayout.CENTER);
-        add(scrollPaneTraza, BorderLayout.EAST);
+        // Crear un JSplitPane para dividir la ventana en dos secciones
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelMatriz, scrollPaneTraza);
+        splitPane.setDividerLocation(1200);  // Establecer la posición inicial del divisor
+        splitPane.setResizeWeight(1.0);  // Permitir que el panel de trazas se redimensione, mientras que el mapa mantiene su tamaño
+
+        // Colocar el JSplitPane en la ventana principal
+        add(splitPane, BorderLayout.CENTER);
 
         setVisible(true);
     }
@@ -99,14 +108,23 @@ public class Graficos extends JFrame {
             return;
         }
 
+        // Obtener el tamaño actual del panel
+        int panelWidth = panelMatriz.getWidth();
+        int panelHeight = panelMatriz.getHeight();
+
+        // Ajustar el tamaño de las celdas en función del tamaño del panel
         int filas = matriz.length;
         int columnas = matriz[0].length;
-        int anchoCelda = Math.min(800 / columnas, 800 / filas);
-        int altoCelda = anchoCelda;
 
-        int offsetX = (800 - (anchoCelda * columnas)) / 2;
-        int offsetY = (800 - (altoCelda * filas)) / 2;
+        // Asegurar que las celdas sean cuadradas
+        int anchoCelda = Math.min(panelWidth / columnas, panelHeight / filas);
+        int altoCelda = anchoCelda;  // El alto debe ser igual al ancho para que las celdas sean cuadradas
 
+        // Asegurarse de que el panel se ajuste correctamente (sin cortar la parte inferior)
+        int offsetX = (panelWidth - (anchoCelda * columnas)) / 2;
+        int offsetY = (panelHeight - (altoCelda * filas)) / 2;
+
+        // Dibujar la matriz
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
                 Image imagen = imagenes.getOrDefault(matriz[i][j], imagenes.get(SUELO));
@@ -146,6 +164,7 @@ public class Graficos extends JFrame {
         ventanaVictoria.setLocationRelativeTo(this);
 
         class ImagenLabel extends JLabel {
+
             Acciones[] direcciones = {Acciones.ARR, Acciones.ARRDER, Acciones.DER, Acciones.ABADER, Acciones.ABA, Acciones.ABAIZQ, Acciones.IZQ, Acciones.ARRIZQ};
             int indice = 0;
 

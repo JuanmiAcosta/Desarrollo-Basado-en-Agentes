@@ -15,10 +15,12 @@ public class Entorno {
     private static final int ID_AGENTE = 9,
             ID_OBJETIVO = 8,
             ID_JARL = 7;
+    
     private Mapa mapa;
     private Posicion posAgente;
     private Posicion posJarl;
     private ArrayList<Posicion> posObjetivos;
+  
 
     // Constructor
     public Entorno(Mapa mapa, Posicion posAgente, Posicion posJarl, ArrayList<Posicion> posObjetivos) {
