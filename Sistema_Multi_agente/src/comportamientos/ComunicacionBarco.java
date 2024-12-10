@@ -118,8 +118,15 @@ public class ComunicacionBarco extends Behaviour {
                             CONV_BARCO_VIDENTE_ID = msgJarl.getContent();
 
                             // Le mando mensaje al vidente
+                            msgVidente = new ACLMessage(ACLMessage.REQUEST);
+                            msgVidente.addReceiver(this.vidente);
+                            msgVidente.setReplyWith("crew-coordinates-request");
+                            msgVidente.setContent("Bro, tengo el amuleto de Jarl. ¿Puedes ayudarme a encontrar a la tripulación? En plan.");
+                            msgVidente.setConversationId(CONV_BARCO_VIDENTE_ID);
+                            myAgent.send(msgVidente);
                             
-                            // HAY QUE CAMBIAR DE PASO
+                            // HAY QUE CAMBIAR DE PASOó
+                            this.paso = EstadosBarco.ESPERANDO_COORD_NAUFRAGOS;    
                             
                         } else {
 
