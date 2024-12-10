@@ -286,7 +286,7 @@ public class AgenteBarco extends Agent {
         memoria.put(pos, memoria.getOrDefault(pos, 0) + 1);
     }
 
-    public void imprimirMemoria() {
+     public void imprimirMemoria() {
         System.out.println("Memoria del Agente:");
         for (HashMap.Entry<Posicion, Integer> entry : memoria.entrySet()) {
             Posicion posicion = entry.getKey();

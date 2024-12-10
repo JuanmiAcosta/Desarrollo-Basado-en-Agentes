@@ -59,7 +59,6 @@ public class ComunicacionVidente extends Behaviour {
             case ESPERANDO_INICIO_BARCO:
                 
                 msgBarco = agente.blockingReceive();
-                System.out.println(msgBarco.toString());
                 String posNaufrago = "Bro, no quedan náufragos. En plan.";
                 Posicion pos = new Posicion();
 

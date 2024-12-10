@@ -38,8 +38,8 @@ public class RepercusionEnt extends Behaviour {
                 Logger.getLogger(RepercusionEnt.class.getName()).log(Level.SEVERE, null, ex);
             }
             entorno.setPosAgente(agente.getPosAgente(), agente.getPosAnterior(), agente.getMemoria().get(agente.getPosAnterior()));
-            entorno.getMapa().imprimirMapa();
-            agente.imprimirMemoria();
+            //entorno.getMapa().imprimirMapa();
+            //agente.imprimirMemoria();
             agente.getGraficos().actualizarMatriz(agente.getSensores().getEntorno().getMapa().getMapa(), agente.getMovDecidido());
             
             //Cuando encontramos un objetivo pasamos su posición a null para seguir con comunicaciones

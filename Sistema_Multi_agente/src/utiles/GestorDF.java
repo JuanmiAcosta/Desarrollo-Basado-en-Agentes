@@ -26,7 +26,6 @@ public class GestorDF {
 
         try {
             DFService.register(agente, dfd);
-            //System.out.println(agente.getLocalName() + " registrado en el DF como " + tipo + " (" + nombre + ")");
         } catch (FIPAException e) {
             System.err.println("Error registrando el agente " + agente.getLocalName() + ": " + e.getMessage());
         }
@@ -51,7 +50,6 @@ public class GestorDF {
             for (int i = 0; i < resultados.length; i++) {
                 agentesEncontrados[i] = resultados[i].getName();
             }
-            //System.out.println(agente.getLocalName() + " encontró " + agentesEncontrados.length + " agentes de tipo " + tipo);
             return agentesEncontrados;
         } catch (FIPAException e) {
             System.err.println("Error buscando agentes para " + agente.getLocalName() + ": " + e.getMessage());
@@ -81,13 +79,11 @@ public class GestorDF {
      */
     public static AID buscarAgenteEnLista(AID[] agentes, String nombre) {
         if (agentes == null || agentes.length == 0) {
-            System.out.println("La lista de agentes está vacía.");
             return null;
         }
 
         for (AID agente : agentes) {
             if (agente.getLocalName().equalsIgnoreCase(nombre)) {
-                //System.out.println("Agente encontrado: " + agente.getName());
                 return agente;
             }
         }

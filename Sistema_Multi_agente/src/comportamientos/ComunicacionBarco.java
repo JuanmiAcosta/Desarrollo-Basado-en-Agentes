@@ -76,7 +76,6 @@ public class ComunicacionBarco extends Behaviour {
                     msgSkal.setConversationId(CONV_BARCO_SKAL_ID);
                     myAgent.send(msgSkal);
 
-                    //System.out.println("[Master] Enviado REQUEST a todos los esclavos.");
                     this.agente.getGraficos().agregarTraza(msgSkal.toString());
                     this.paso = EstadosBarco.ESPERANDO_TRADUCCION_INICIO;
 
@@ -205,8 +204,6 @@ public class ComunicacionBarco extends Behaviour {
             }
         }
         
-        System.out.println(this.agente.getPosObj());
-
     }
 
     @Override
