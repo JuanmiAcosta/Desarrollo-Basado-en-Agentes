@@ -108,6 +108,10 @@ public class AgenteBarco extends Agent {
     public void setPosAgente(Posicion posAgente) {
         this.posAgente = posAgente;
     }
+    
+    public void setPosObjetivo(Posicion posObjetivo){
+        this.posObj = posObjetivo;
+    }
 
     public Posicion getPosObj() {
         return posObj;
@@ -282,7 +286,7 @@ public class AgenteBarco extends Agent {
         memoria.put(pos, memoria.getOrDefault(pos, 0) + 1);
     }
 
-    public void imprimirMemoria() {
+     public void imprimirMemoria() {
         System.out.println("Memoria del Agente:");
         for (HashMap.Entry<Posicion, Integer> entry : memoria.entrySet()) {
             Posicion posicion = entry.getKey();
@@ -332,6 +336,8 @@ public class AgenteBarco extends Agent {
     }
     
     public void borrarMemoria(){
-        this.memoria.clear();
+        for (Posicion key : memoria.keySet()) {
+            memoria.put(key, 0);
+        }
     }
 }

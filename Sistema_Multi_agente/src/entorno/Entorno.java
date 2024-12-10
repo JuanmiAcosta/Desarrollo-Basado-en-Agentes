@@ -71,6 +71,7 @@ public class Entorno {
     public void setPosAgente(Posicion posAgente, Posicion posAnterior, Integer barriles) {
         this.posAgente = posAgente;
         mapa.colocarItem(posAgente, ID_AGENTE);
+        if (barriles==0)barriles=1; // Cuando encontramos un objetivo también ponemos barriles
         mapa.colocarItem(posAnterior, barriles);
     }
 

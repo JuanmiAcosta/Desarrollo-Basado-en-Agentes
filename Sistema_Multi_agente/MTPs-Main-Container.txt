@@ -1,1 +1,1 @@
-http://LAPTOP-L902IP0B:7778/acc
+http://juanmi:7778/acc
