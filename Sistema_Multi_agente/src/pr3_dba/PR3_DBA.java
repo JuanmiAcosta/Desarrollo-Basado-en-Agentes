@@ -22,7 +22,7 @@ import utiles.Posicion;
  *
  * @author juanmi
  */
-public class PR3_DBA { //  mapWithoutObstacle.txt 9 9
+public class PR3_DBA { //  map100.txt 15 4 7 12 8 62 4 92 98 48 21 96 96 0 94 12 86 8 12 3 8
 
     public static void main(String[] args) throws IOException {
 
@@ -63,8 +63,8 @@ public class PR3_DBA { //  mapWithoutObstacle.txt 9 9
                         colJarl = Integer.parseInt(inputs[4]);
                         numNaufragos = Integer.parseInt(inputs[5]);
 
-                        for (int i = 1; i < numNaufragos + 1; i++) {
-                            posNaufragos.add(new Posicion(Integer.parseInt(inputs[5 + (1 * i)]), Integer.parseInt(inputs[5 + (2 * i)])));
+                        for (int i = 6; i < numNaufragos + 6; i=i+2) {
+                            posNaufragos.add(new Posicion(Integer.parseInt(inputs[i]), Integer.parseInt(inputs[i+1])));
                         }
 
                     } else {

@@ -195,7 +195,7 @@ public class ComunicacionBarco extends Behaviour {
 
                 case SOLICITAR_COORD_JARL:
 
-                    msgSkal.createReply(ACLMessage.REQUEST);
+                    msgSkal = msgSkal.createReply(ACLMessage.REQUEST);
                     msgSkal.setContent("Bro, dónde está Jarl? En plan.");
                     agente.send(msgSkal);
                     agente.getGraficos().agregarTraza(msgSkal.toString());
@@ -215,7 +215,7 @@ public class ComunicacionBarco extends Behaviour {
                             String mensajeAMandar2 = msgSkal.getContent();
 
                             // Enviar PROPOSAL a Skal
-                            msgJarl.createReply(ACLMessage.QUERY_REF);
+                            msgJarl = msgJarl.createReply(ACLMessage.QUERY_REF);
                             msgJarl.setContent(mensajeAMandar2);
                             myAgent.send(msgJarl);
                             agente.getGraficos().agregarTraza(msgJarl.toString());
@@ -254,7 +254,6 @@ public class ComunicacionBarco extends Behaviour {
                 case SOLICITAR_FIN_MISION:
                     
                     System.out.println("TRABAJITO DE ÓSCAR");
-                    System.exit(0);
 
                 default:
                     System.out.println("[Barco] Error: Estado desconocido.");

@@ -80,8 +80,32 @@ public class Graficos extends JFrame {
                 dibujarMatriz(g);
             }
         };
-        panelMatriz.setPreferredSize(new Dimension(1200, 800));  // Tamaño del panel del mapa
+
+        // Ajustar el tamaño preferido del panel en función del tamaño de la matriz
+        int filas = matriz.length;
+        int columnas = matriz[0].length;
+        int anchoCelda = 30;  // Tamaño fijo para las celdas, se puede ajustar
+        int altoCelda = anchoCelda;
+
+        int panelWidth = Math.min(anchoCelda * columnas, 3000);  // Establecer un tamaño máximo
+        int panelHeight = Math.min(altoCelda * filas, 3000);  // Establecer un tamaño máximo
+
+        panelMatriz.setPreferredSize(new Dimension(panelWidth, panelHeight));
         panelMatriz.setBackground(Color.BLACK);
+
+        // Añadir barras de desplazamiento solo si la matriz es mayor a 50x50
+        JScrollPane scrollPanelMatriz = null;
+        if (filas > 50 || columnas > 50) {
+            scrollPanelMatriz = new JScrollPane(panelMatriz);
+            scrollPanelMatriz.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+            scrollPanelMatriz.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        } else {
+            scrollPanelMatriz = new JScrollPane(panelMatriz);
+            scrollPanelMatriz.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            scrollPanelMatriz.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        }
+        scrollPanelMatriz.getVerticalScrollBar().setUnitIncrement(16);
+
 
         // Area de texto para la traza (TextAreaTraza)
         textAreaTraza = new JTextArea();
@@ -92,13 +116,16 @@ public class Graficos extends JFrame {
         JScrollPane scrollPaneTraza = new JScrollPane(textAreaTraza);
         scrollPaneTraza.setPreferredSize(new Dimension(400, 800));  // Tamaño ajustado del área de trazas
 
-        // Crear un JSplitPane para dividir la ventana en dos secciones
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelMatriz, scrollPaneTraza);
-        splitPane.setDividerLocation(1200);  // Establecer la posición inicial del divisor
-        splitPane.setResizeWeight(1.0);  // Permitir que el panel de trazas se redimensione, mientras que el mapa mantiene su tamaño
+        // Crear una nueva ventana para mostrar las trazas
+        JFrame ventanaTraza = new JFrame("Trazas");
+        ventanaTraza.setSize(400, 800);
+        ventanaTraza.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        ventanaTraza.setLocationRelativeTo(this);
+        ventanaTraza.add(scrollPaneTraza);
+        ventanaTraza.setVisible(true);
 
-        // Colocar el JSplitPane en la ventana principal
-        add(splitPane, BorderLayout.CENTER);
+        // Colocar el scrollPanelMatriz en la ventana principal
+        add(scrollPanelMatriz, BorderLayout.CENTER);
 
         setVisible(true);
     }
@@ -199,5 +226,4 @@ public class Graficos extends JFrame {
             }
         }, 0, 500);
     }
-
 }

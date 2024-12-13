@@ -60,7 +60,7 @@ public class ComunicacionJarl extends Behaviour {
     @Override
     public void action() {
 
-        String mensajeConfirm, coordenadas, mensajeTraducido;
+        String mensajeConfirm, coordenadas, mensajeTraducido = "";
 
         switch (this.paso) {
             case ESPERANDO_ENVIO_BARCO:
@@ -123,18 +123,39 @@ public class ComunicacionJarl extends Behaviour {
 
                 if (msgBarco != null && msgBarco.getPerformative() == ACLMessage.QUERY_REF) {
                     if (msgBarco.getSender().equals(barco)) {
-                        coordenadas = "Hyvää joulua, COORD [" + agente.getPosJarl().getFila() + "," + agente.getPosJarl().getFila() + "]. Nähdään pian.";
-                        
+                        coordenadas = "Hyvää joulua, COORD [" + agente.getPosJarl().getFila() + "," + agente.getPosJarl().getCol() + "]. Nähdään pian.";
 
-                        msgSkal = msgSkal.createReply(ACLMessage.INFORM);
-                        msgBarco.setContent(mensajeTraducido);
-                        agente.send(msgBarco);
-                        agente.getGraficos().agregarTraza(msgBarco.toString());
-                        
-                        // this.paso = EstadosJarl.ESPERANDO_TRADUCCION_
+                        msgSkal = msgSkal.createReply(ACLMessage.REQUEST);
+                        msgSkal.setContent(coordenadas);
+                        agente.send(msgSkal);
+                        agente.getGraficos().agregarTraza(msgSkal.toString());
+
+                        this.paso = EstadosJarl.ESPERANDO_TRADUCCION_SKAL;
                     }
                 }
 
+                break;
+
+            case ESPERANDO_TRADUCCION_SKAL:
+
+                msgSkal = agente.blockingReceive();
+
+                if (msgSkal != null && msgSkal.getPerformative() == ACLMessage.INFORM) {
+                    if (msgSkal.getSender().equals(skal)) {
+                        msgBarco = msgBarco.createReply(ACLMessage.INFORM);
+                        msgBarco.setContent(msgSkal.getContent());
+                        agente.send(msgBarco);
+                        agente.getGraficos().agregarTraza(msgBarco.toString());
+
+                        this.paso = EstadosJarl.ESPERANDO_CONFIRMACION_BARCO;
+                    }
+                }
+
+                break;
+
+            case ESPERANDO_CONFIRMACION_BARCO:
+
+                // Aqui tendra que esperar a que el barco llegue a la posicion de Jarl
                 break;
 
             default:
