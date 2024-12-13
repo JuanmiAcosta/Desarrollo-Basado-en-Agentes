@@ -100,10 +100,10 @@ public class ComunicacionJarl extends Behaviour {
                     if(msgSkal.getSender().equals(skal)) {
                         // Envio de mensaje traducido al barco
                         if(esDigno) {
-                            msgBarco = msgBarco.createReply(ACLMessage.CONFIRM);
+                            msgBarco = msgBarco.createReply(ACLMessage.ACCEPT_PROPOSAL);
                         }
                         else {
-                            msgBarco = msgBarco.createReply(ACLMessage.DISCONFIRM);
+                            msgBarco = msgBarco.createReply(ACLMessage.REJECT_PROPOSAL);
                         }
                         
                         msgBarco.setContent(msgSkal.getContent());

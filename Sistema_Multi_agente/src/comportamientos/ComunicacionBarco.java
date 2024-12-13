@@ -113,7 +113,7 @@ public class ComunicacionBarco extends Behaviour {
 
                     msgJarl = agente.blockingReceive();
 
-                    if (msgJarl != null && msgJarl.getPerformative() == ACLMessage.CONFIRM) {
+                    if (msgJarl != null && msgJarl.getPerformative() == ACLMessage.ACCEPT_PROPOSAL) {
 
                         if (msgJarl.getSender().equals(jarl) && GestorComunicacion.checkMensajeBarco(msgJarl.getContent())) {
 
@@ -140,7 +140,7 @@ public class ComunicacionBarco extends Behaviour {
                         }
 
                         // Enviar REQUEST a vidente
-                    } else if (msgJarl != null && msgJarl.getPerformative() == ACLMessage.DISCONFIRM) {
+                    } else if (msgJarl != null && msgJarl.getPerformative() == ACLMessage.REJECT_PROPOSAL) {
 
                         if (msgJarl.getSender().equals(jarl) && GestorComunicacion.checkMensajeBarco(msgJarl.getContent())) {
 
