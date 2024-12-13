@@ -35,5 +35,9 @@ public class AgenteJarl extends Agent {
     public Graficos getGraficos() {
         return g;
     }
+
+    public Posicion getPosJarl() {
+        return posJarl;
+    }
     
 }

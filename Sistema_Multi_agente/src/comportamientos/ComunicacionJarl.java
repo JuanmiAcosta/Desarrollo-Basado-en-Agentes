@@ -16,11 +16,11 @@ public class ComunicacionJarl extends Behaviour {
     private EstadosJarl paso;
     private AgenteJarl agente;
     private Boolean finish = false;
-    
+
     private Boolean esDigno = false;
 
     private AID barco, skal;
-    
+
     private ACLMessage msgBarco, msgSkal;
 
     public ComunicacionJarl(AgenteJarl agent) {
@@ -40,7 +40,7 @@ public class ComunicacionJarl extends Behaviour {
             // Buscar los agentes del DF
             agentes = GestorDF.buscarAgentes(this.agente, "explorador");
             agentesAld = GestorDF.buscarAgentes(this.agente, "aldeano");
-            
+
             if (agentes.length == 1 && agentesAld.length == 3) { // Número esperado de servicios
                 todosLosAgentesRegistrados = true;
             } else {
@@ -54,71 +54,87 @@ public class ComunicacionJarl extends Behaviour {
         }
 
         this.barco = GestorDF.buscarAgenteEnLista(agentes, "barco-vikingo");
-        this.skal = GestorDF.buscarAgenteEnLista(agentesAld , "skal");
+        this.skal = GestorDF.buscarAgenteEnLista(agentesAld, "skal");
     }
 
     @Override
     public void action() {
-        
-        String mensajeConfirm;
-        
+
+        String mensajeConfirm, coordenadas, mensajeTraducido;
+
         switch (this.paso) {
             case ESPERANDO_ENVIO_BARCO:
                 msgBarco = agente.blockingReceive();
-                
-                if(msgBarco != null && msgBarco.getPerformative() == ACLMessage.PROPOSE) {
-                    if(msgBarco.getSender().equals(barco) && GestorComunicacion.checkMensajeJarl(msgBarco.getContent())) {
-                        
-                         // Crear mensaje de confirmacion o denegación
-                         esDigno = esBarcoDigno();
-                         mensajeConfirm = GestorComunicacion.jarlConfirmaDigno(esDigno, CONV_BARCO_VIDENTE_ID);
-                            
-                         // Enviar CONFIRM o DISCONFIRM al barco
-                         msgSkal = new ACLMessage(ACLMessage.REQUEST);
-                         msgSkal.addReceiver(skal);
-                         msgSkal.setContent(mensajeConfirm);
-                         msgSkal.setReplyWith("validation-request");
-                         msgSkal.setConversationId(CONV_BARCO_JARL_ID);
-                         agente.send(msgSkal);
-                         agente.getGraficos().agregarTraza(msgSkal.toString());
-                         paso = EstadosJarl.ESPERANDO_RESP_SKAL;
-                    }
-                    else {
+
+                if (msgBarco != null && msgBarco.getPerformative() == ACLMessage.PROPOSE) {
+                    if (msgBarco.getSender().equals(barco) && GestorComunicacion.checkMensajeJarl(msgBarco.getContent())) {
+
+                        // Crear mensaje de confirmacion o denegación
+                        esDigno = esBarcoDigno();
+                        mensajeConfirm = GestorComunicacion.jarlConfirmaDigno(esDigno, CONV_BARCO_VIDENTE_ID);
+
+                        // Enviar CONFIRM o DISCONFIRM al barco
+                        msgSkal = new ACLMessage(ACLMessage.REQUEST);
+                        msgSkal.addReceiver(skal);
+                        msgSkal.setContent(mensajeConfirm);
+                        msgSkal.setReplyWith("validation-request");
+                        msgSkal.setConversationId(CONV_BARCO_JARL_ID);
+                        agente.send(msgSkal);
+                        agente.getGraficos().agregarTraza(msgSkal.toString());
+                        paso = EstadosJarl.ESPERANDO_RESP_SKAL;
+                    } else {
                         System.out.println("No entiendo lo que me quieres decir, soy Jarl");
                     }
-                }
-                else {
+                } else {
                     System.out.println("No ha llegado nada");
                 }
 
                 break;
-            
+
             case ESPERANDO_RESP_SKAL:
                 msgSkal = agente.blockingReceive();
-                
-                if(msgSkal != null && msgSkal.getPerformative() == ACLMessage.INFORM) {
-                    if(msgSkal.getSender().equals(skal)) {
+
+                if (msgSkal != null && msgSkal.getPerformative() == ACLMessage.INFORM) {
+                    if (msgSkal.getSender().equals(skal)) {
                         // Envio de mensaje traducido al barco
-                        if(esDigno) {
+                        if (esDigno) {
                             msgBarco = msgBarco.createReply(ACLMessage.ACCEPT_PROPOSAL);
-                        }
-                        else {
+                        } else {
                             msgBarco = msgBarco.createReply(ACLMessage.REJECT_PROPOSAL);
                         }
-                        
+
                         msgBarco.setContent(msgSkal.getContent());
                         agente.send(msgBarco);
                         agente.getGraficos().agregarTraza(msgBarco.toString());
-                        // HAY QUE CAMBIAR DE PASO
-                    }
-                    else {
+
+                        this.paso = EstadosJarl.ESPERANDO_SOLICITUD_COORDENADAS;
+                    } else {
                         System.out.println("No entiendo lo que me quieres decir");
                     }
-                }
-                else {
+                } else {
                     System.out.println("No ha llegado nada");
                 }
-                
+
+                break;
+
+            case ESPERANDO_SOLICITUD_COORDENADAS:
+
+                msgBarco = agente.blockingReceive();
+
+                if (msgBarco != null && msgBarco.getPerformative() == ACLMessage.QUERY_REF) {
+                    if (msgBarco.getSender().equals(barco)) {
+                        coordenadas = "Hyvää joulua, COORD [" + agente.getPosJarl().getFila() + "," + agente.getPosJarl().getFila() + "]. Nähdään pian.";
+                        
+
+                        msgSkal = msgSkal.createReply(ACLMessage.INFORM);
+                        msgBarco.setContent(mensajeTraducido);
+                        agente.send(msgBarco);
+                        agente.getGraficos().agregarTraza(msgBarco.toString());
+                        
+                        // this.paso = EstadosJarl.ESPERANDO_TRADUCCION_
+                    }
+                }
+
                 break;
 
             default:

@@ -104,7 +104,7 @@ public class ComunicacionSkal extends Behaviour {
                         msgJarl.setContent(mensajeTraducido);
                         agente.send(msgJarl);
                         agente.getGraficos().agregarTraza(msgJarl.toString());
-                        // HAY QUE CAMBIAR DE PASO
+                        this.paso = EstadosSkal.ESPERANDO_SOLICITUD_TRADUCCION_BARCO;
                     }
                     else {
                         System.out.println("No entiendo lo que me quieres decir, soy Skal");
@@ -116,6 +116,49 @@ public class ComunicacionSkal extends Behaviour {
 
                 break;
                 
+            case ESPERANDO_SOLICITUD_TRADUCCION_BARCO:
+                
+                msgBarco = agente.blockingReceive();
+                
+                if(msgBarco != null && msgBarco.getPerformative() == ACLMessage.REQUEST) {
+                    if(msgBarco.getSender().equals(barco)) {
+                        mensajeTraducido = GestorComunicacion.traduceBarcoJarl(msgBarco.getContent());
+
+                        msgBarco = msgBarco.createReply(ACLMessage.INFORM);
+                        msgBarco.setContent(mensajeTraducido);
+                        agente.send(msgBarco);
+                        agente.getGraficos().agregarTraza(msgBarco.toString());
+                        
+                        this.paso = EstadosSkal.ESPERANDO_SOLICITUD_TRADUCCION_JARL;
+                    }
+                }
+                
+                break;
+            
+            case ESPERANDO_SOLICITUD_TRADUCCION_JARL:
+                
+                msgJarl = agente.blockingReceive();
+                
+                if(msgJarl != null && msgJarl.getPerformative() == ACLMessage.REQUEST) {
+                    if(msgJarl.getSender().equals(jarl)) {
+                        mensajeTraducido = GestorComunicacion.traduceJarlBarco(msgJarl.getContent());
+
+                        msgJarl = msgJarl.createReply(ACLMessage.INFORM);
+                        msgJarl.setContent(mensajeTraducido);
+                        agente.send(msgJarl);
+                        agente.getGraficos().agregarTraza(msgJarl.toString());
+                        
+                        this.paso = EstadosSkal.ESPERANDO_TRADUCCION_BARCO_2;
+                    }
+                }
+                
+                break;
+                
+            case ESPERANDO_TRADUCCION_BARCO_2:
+                
+                // ESPERA MENSAJE FINAL DEL BARCO
+                
+                break;
                 
             default:
                 System.out.println("[Skal] Error: Estado desconocido.");
