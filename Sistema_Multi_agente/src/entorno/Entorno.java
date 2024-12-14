@@ -72,7 +72,7 @@ public class Entorno {
         this.posAgente = posAgente;
         mapa.colocarItem(posAgente, ID_AGENTE);
         if (barriles==0)barriles=1; // Cuando encontramos un objetivo también ponemos barriles
-        if (barriles >= 3)barriles=3; // Para no pasarnos a barriles = 7 y se dibuje a Jarl sin querer
+        if (barriles >= 3 && barriles <= 6)barriles=3; // Para no pasarnos a barriles = 7 y se dibuje a Jarl sin querer
         mapa.colocarItem(posAnterior, barriles);
     }
 
