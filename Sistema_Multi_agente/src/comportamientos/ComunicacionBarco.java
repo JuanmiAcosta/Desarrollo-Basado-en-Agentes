@@ -5,6 +5,8 @@ import estados.EstadosBarco;
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import jade.core.behaviours.Behaviour;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import utiles.GestorComunicacion;
 import utiles.GestorDF;
 import utiles.Posicion;
@@ -253,7 +255,58 @@ public class ComunicacionBarco extends Behaviour {
                     
                 case SOLICITAR_FIN_MISION:
                     
-                    System.out.println("TRABAJITO DE ÓSCAR");
+                    msgSkal = msgSkal.createReply(ACLMessage.REQUEST);
+                    msgSkal.setContent("Bro, ya llegué? En plan.");
+                    agente.send(msgSkal);
+                    agente.getGraficos().agregarTraza(msgSkal.toString());
+
+                    this.paso = EstadosBarco.ESPERANDO_TRADUCCION_4;
+                    
+                    break;
+                    
+                case ESPERANDO_TRADUCCION_4:
+                    
+                    msgSkal = agente.blockingReceive();
+
+                    if (msgSkal != null && msgSkal.getPerformative() == ACLMessage.INFORM) {
+
+                        if (msgSkal.getSender().equals(skal) && GestorComunicacion.checkMensajeJarl(msgSkal.getContent())) {
+
+                            // Traduccion del mensaje
+                            String mensajeAMandar = msgSkal.getContent();
+
+                            msgJarl = msgJarl.createReply(ACLMessage.REQUEST);
+                            msgJarl.setContent(mensajeAMandar);
+                            myAgent.send(msgJarl);
+                            agente.getGraficos().agregarTraza(msgJarl.toString());
+
+                            this.paso = EstadosBarco.ESPERANDO_HOHOHO;
+                            break;
+
+                        } else {
+                            System.out.println("No entiendo lo que me quieres decir");
+                        }
+                    } else {
+                        System.out.println("Error esperando INFORM en: " + agente.getLocalName());
+                    }
+                    
+                    break;
+                    
+                case ESPERANDO_HOHOHO:
+                    
+                {
+                    try {
+                        System.out.println("Energia gastada: " + agente.getSensores().getEnergia());
+                        Thread.sleep(5000);
+                        System.exit(0);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(ComunicacionBarco.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                    
+                    break;
+
+                    
 
                 default:
                     System.out.println("[Barco] Error: Estado desconocido.");

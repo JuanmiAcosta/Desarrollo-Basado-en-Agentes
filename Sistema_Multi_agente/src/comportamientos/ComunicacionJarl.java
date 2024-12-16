@@ -2,6 +2,7 @@ package comportamientos;
 
 import agentes.AgenteJarl;
 import estados.EstadosJarl;
+import static estados.EstadosJarl.ESPERANDO_RESP_SKAL;
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import jade.core.behaviours.Behaviour;
@@ -155,7 +156,50 @@ public class ComunicacionJarl extends Behaviour {
 
             case ESPERANDO_CONFIRMACION_BARCO:
 
-                // Aqui tendra que esperar a que el barco llegue a la posicion de Jarl
+                msgBarco = agente.blockingReceive();
+
+                if (msgBarco != null && msgBarco.getPerformative() == ACLMessage.REQUEST) {
+                    if (msgBarco.getSender().equals(barco) && GestorComunicacion.checkMensajeJarl(msgBarco.getContent())) {
+
+                        // Enviar CONFIRM o DISCONFIRM al barco
+                        msgSkal = new ACLMessage(ACLMessage.REQUEST);
+                        msgSkal.addReceiver(skal);
+                        msgSkal.setContent("Hyvää joulua, HO HO HOOO!!. Nähdään pian.");
+                        msgSkal.setReplyWith("finished-request");
+                        msgSkal.setConversationId(CONV_BARCO_JARL_ID);
+                        agente.send(msgSkal);
+                        agente.getGraficos().agregarTraza(msgSkal.toString());
+                        paso = EstadosJarl.ESPERANDO_RESP_SKAL_2;
+                    } else {
+                        System.out.println("No entiendo lo que me quieres decir, soy Jarl");
+                    }
+                } else {
+                    System.out.println("No ha llegado nada");
+                }
+
+                break;
+                
+                case ESPERANDO_RESP_SKAL_2:
+                msgSkal = agente.blockingReceive();
+
+                if (msgSkal != null && msgSkal.getPerformative() == ACLMessage.INFORM) {
+                    if (msgSkal.getSender().equals(skal)) {
+                        
+                        msgBarco = new ACLMessage(ACLMessage.INFORM);
+                        msgBarco.addReceiver(barco);
+                        msgBarco.setContent(msgSkal.getContent());
+                        msgBarco.setReplyWith("finished-request");
+                        msgBarco.setConversationId(CONV_BARCO_JARL_ID);
+                        agente.send(msgBarco);
+                        agente.getGraficos().agregarTraza(msgBarco.toString());
+
+                    } else {
+                        System.out.println("No entiendo lo que me quieres decir");
+                    }
+                } else {
+                    System.out.println("No ha llegado nada");
+                }
+
                 break;
 
             default:
