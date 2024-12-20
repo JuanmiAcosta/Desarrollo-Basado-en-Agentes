@@ -21,8 +21,9 @@ import utiles.Posicion;
  *
  * @author juanmi
  */
-public class PR3_DBA { //  map100.txt 15 4 7 12 8 62 4 92 98 48 21 96 96 0 94 12 86 8 12 3 8
-    //map40.txt 15 4 7 12 8 1 1 1 14 3 18 5 5 6 10 11 10 13 34 16 21
+public class PR3_DBA { 
+    //mapWithoutObstacle.txt 99 99 0 0 8 5 7 11 71 23 39 42 61 46 17 59 39 86 84 90 4
+    //mapObstacle.txt 99 99 0 0 11 12 19 41 41 60 52 33 63 34 66 56 92 74 95 10
 
     public static void main(String[] args) throws IOException {
 

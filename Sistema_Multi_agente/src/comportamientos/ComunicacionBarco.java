@@ -65,6 +65,8 @@ public class ComunicacionBarco extends Behaviour {
 
     @Override
     public void action() {
+        
+        String mensajeAMandar = "";
 
         if (agente.getPosObj() == null) {
 
@@ -79,11 +81,11 @@ public class ComunicacionBarco extends Behaviour {
                     myAgent.send(msgSkal);
 
                     this.agente.getGraficos().agregarTraza(msgSkal.toString());
-                    this.paso = EstadosBarco.ESPERANDO_TRADUCCION_INICIO;
+                    this.paso = EstadosBarco.ESPERANDO_TRADUCCION_1;
 
                     break;
 
-                case ESPERANDO_TRADUCCION_INICIO:
+                case ESPERANDO_TRADUCCION_1:
 
                     msgSkal = agente.blockingReceive();
 
@@ -92,7 +94,7 @@ public class ComunicacionBarco extends Behaviour {
                         if (msgSkal.getSender().equals(skal) && GestorComunicacion.checkMensajeJarl(msgSkal.getContent())) {
 
                             // Traduccion del mensaje
-                            String mensajeAMandar = msgSkal.getContent();
+                            mensajeAMandar = msgSkal.getContent();
 
                             // Enviar PROPOSAL a Skal
                             msgJarl = new ACLMessage(ACLMessage.PROPOSE);
@@ -202,10 +204,10 @@ public class ComunicacionBarco extends Behaviour {
                     agente.send(msgSkal);
                     agente.getGraficos().agregarTraza(msgSkal.toString());
 
-                    this.paso = EstadosBarco.ESPERANDO_TRADUCCION_3;
+                    this.paso = EstadosBarco.ESPERANDO_TRADUCCION_2;
                     break;
 
-                case ESPERANDO_TRADUCCION_3:
+                case ESPERANDO_TRADUCCION_2:
 
                     msgSkal = agente.blockingReceive();
 
@@ -214,11 +216,11 @@ public class ComunicacionBarco extends Behaviour {
                         if (msgSkal.getSender().equals(skal) && GestorComunicacion.checkMensajeJarl(msgSkal.getContent())) {
 
                             // Traduccion del mensaje
-                            String mensajeAMandar2 = msgSkal.getContent();
+                            mensajeAMandar = msgSkal.getContent();
 
                             // Enviar PROPOSAL a Skal
                             msgJarl = msgJarl.createReply(ACLMessage.QUERY_REF);
-                            msgJarl.setContent(mensajeAMandar2);
+                            msgJarl.setContent(mensajeAMandar);
                             myAgent.send(msgJarl);
                             agente.getGraficos().agregarTraza(msgJarl.toString());
 
@@ -260,11 +262,11 @@ public class ComunicacionBarco extends Behaviour {
                     agente.send(msgSkal);
                     agente.getGraficos().agregarTraza(msgSkal.toString());
 
-                    this.paso = EstadosBarco.ESPERANDO_TRADUCCION_4;
+                    this.paso = EstadosBarco.ESPERANDO_TRADUCCION_3;
                     
                     break;
                     
-                case ESPERANDO_TRADUCCION_4:
+                case ESPERANDO_TRADUCCION_3:
                     
                     msgSkal = agente.blockingReceive();
 
@@ -273,7 +275,7 @@ public class ComunicacionBarco extends Behaviour {
                         if (msgSkal.getSender().equals(skal) && GestorComunicacion.checkMensajeJarl(msgSkal.getContent())) {
 
                             // Traduccion del mensaje
-                            String mensajeAMandar = msgSkal.getContent();
+                            mensajeAMandar = msgSkal.getContent();
 
                             msgJarl = msgJarl.createReply(ACLMessage.REQUEST);
                             msgJarl.setContent(mensajeAMandar);
